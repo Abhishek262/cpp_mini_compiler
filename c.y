@@ -107,6 +107,7 @@ Stmt:	WhileStmt
 	| ElseStmt
 	| ElseIfStmt
 	| PrintFunc
+	| SwitchStmt
 	| coutstatement
 	| cinstatement
 	| ';'
@@ -149,10 +150,28 @@ ElseStmt: ELSE Stmt
 	| ELSE CompoundStmt 
 	;
 
-/* IfStmt Block */
+/* ElseIfStmt Block */
 ElseIfStmt: ELSEIF '(' Expr ')' Stmt  
 	| ELSEIF '(' Expr ')' CompoundStmt 
 	;
+
+/* SwitchStmt Block */
+SwitchStmt:  SWITCH '(' ID|Expr ')' '{' InnerSwitchStmt '}'
+	;
+
+/* SwitchStmt Block */
+InnerSwitchStmt:  SwitchCaseStmt
+	| SwitchCaseStmt DefaultSwitchStmt
+	;
+
+SwitchCaseStmt: SwitchCaseStmt SwitchCaseStmt	
+	| CASE NUM ':' Stmt
+	| BREAK ';'
+	;
+
+DefaultSwitchStmt: DEFAULT ':' Stmt  BREAK ';'
+	| DEFAULT ':' Stmt
+    ;
 
 /* Struct Statement */
 StructStmt : STRUCT ID '{' Declaration '}'

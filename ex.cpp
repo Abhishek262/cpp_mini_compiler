@@ -21,15 +21,18 @@ int main()
   //     cout << "no";$$
   // }
 
-  switch (expression)
+  switch (ghd>5)
   {
-  case x:
+  case 1:
     // code block
+    int a = 5;
     break;
-  case y:
+  case 2:
     // code block
+    int b = 6;
     break;
   default:
     // code block
+    int c=8;
   }
 }
