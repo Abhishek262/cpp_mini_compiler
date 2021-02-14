@@ -11,7 +11,7 @@ int main()
   }
   else if (a > 7)
   {
-    cout << "heloe" << endl;
+    cout << "heloe" ;
   }
   else
   {
@@ -31,6 +31,8 @@ int main()
     // code block
     int b = 6;
     break;
+  case 3: b = 4;
+
   default:
     // code block
     int c=8;

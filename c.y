@@ -200,7 +200,9 @@ Expr:
 	;
 	
 coutstatement:
-	COUT COUTOP COUTSTR COUTOP ENDL;
+	COUT COUTOP COUTSTR COUTOP ENDL
+	| COUT COUTOP COUTSTR ';'
+	;
 
 cinstatement:
 	CIN CINOP ID;
