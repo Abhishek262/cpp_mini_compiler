@@ -535,6 +535,17 @@ char *yytext;
 #include <stdlib.h>
 
 int fvar = 1;
+#include "y.tab.h"
+	#include<stdio.h>
+	#include<stdlib.h>
+	#include<ctype.h>
+	int yyerror(char*);
+	int st[100];
+	int top = 0;
+	int count = 0;
+	void Gen_Symbol_Table(char *text,int nm,int scp);
+	void display();
+	void insert_in_st(char*, char*, int, char* );
 
 #line 540 "lex.yy.c"
 #line 541 "lex.yy.c"
@@ -819,149 +830,149 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 13 "c.l"
+#line 18 "c.l"
 { fvar = 0;return COUTSTR; }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 14 "c.l"
+#line 19 "c.l"
 { fvar = 0; }
 	YY_BREAK
 case 3:
 /* rule 3 can match eol */
 YY_RULE_SETUP
-#line 15 "c.l"
+#line 20 "c.l"
 { fvar = 1; yylineno = yylineno + 1;}
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 16 "c.l"
+#line 21 "c.l"
 { fvar = 0; return COUT; }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 17 "c.l"
+#line 22 "c.l"
 { fvar = 0;return ENDL;}
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 18 "c.l"
+#line 23 "c.l"
 { fvar = 0;return CIN;}
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 19 "c.l"
+#line 24 "c.l"
 { fvar = 0;return ACCESS;}
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 20 "c.l"
+#line 25 "c.l"
 { fvar = 0;return INT;}
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 21 "c.l"
+#line 26 "c.l"
 { fvar = 0;return FLOAT;}
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 22 "c.l"
+#line 27 "c.l"
 { fvar = 0;return CHAR;}
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 23 "c.l"
+#line 28 "c.l"
 { fvar = 0;return VOID;}
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 24 "c.l"
+#line 29 "c.l"
 { fvar = 0;return DOUBLE;}
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 25 "c.l"
+#line 30 "c.l"
 { fvar = 0;return FNAME;}
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 26 "c.l"
+#line 31 "c.l"
 { fvar = 0;return NFNAM;}
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 27 "c.l"
+#line 32 "c.l"
 { fvar = 0;return FOR;}
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 28 "c.l"
+#line 33 "c.l"
 { fvar = 0;return WHILE;}
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 29 "c.l"
+#line 34 "c.l"
 { fvar = 0;return IF;}
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 30 "c.l"
+#line 35 "c.l"
 { fvar = 0;return ELSE;}
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 31 "c.l"
+#line 36 "c.l"
 {fvar = 0;return ELSEIF;}
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 32 "c.l"
+#line 37 "c.l"
 { fvar = 0;return PRINTF;}
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 33 "c.l"
+#line 38 "c.l"
 { fvar =0;return SWITCH;}
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 34 "c.l"
+#line 39 "c.l"
 { fvar =0;return CASE;}
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 35 "c.l"
+#line 40 "c.l"
 { fvar =0;return BREAK;}
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 36 "c.l"
+#line 41 "c.l"
 { fvar =0;return DEFAULT;}
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 37 "c.l"
+#line 42 "c.l"
 { fvar = 0;return STRUCT;}
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 38 "c.l"
+#line 43 "c.l"
 { fvar = 0;return CLASS;}
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 39 "c.l"
+#line 44 "c.l"
 ;
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 40 "c.l"
+#line 45 "c.l"
 { fvar = 0;return NUM;}
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 41 "c.l"
-{
+#line 46 "c.l"
+{				Gen_Symbol_Table(yytext,yylineno,st[top]);
 				if (fvar) {
 					yylval = *yytext - 'a';
 					return CUSTOM;
@@ -973,68 +984,78 @@ YY_RULE_SETUP
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 50 "c.l"
+#line 55 "c.l"
 { fvar = 0;return COUTOP;}
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 51 "c.l"
+#line 56 "c.l"
 { fvar = 0;return CINOP;}
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 52 "c.l"
+#line 57 "c.l"
 { fvar = 0;return LE;}
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 53 "c.l"
+#line 58 "c.l"
 { fvar = 0;return GE;}
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 54 "c.l"
+#line 59 "c.l"
 { fvar = 0;return EQ;}
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 55 "c.l"
+#line 60 "c.l"
 { fvar = 0;return NE;}
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 56 "c.l"
+#line 61 "c.l"
 { fvar = 0;return GT;}
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 57 "c.l"
+#line 62 "c.l"
 { fvar = 0;return LT;}
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 58 "c.l"
+#line 63 "c.l"
 { fvar = 0;return DOT;}
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 59 "c.l"
-;	
+#line 64 "c.l"
+{count=count+1;top=top+1;st[top]=count;return T_openFlowerBracket ;}
 	YY_BREAK
 case 40:
-/* rule 40 can match eol */
 YY_RULE_SETUP
-#line 60 "c.l"
-;
+#line 65 "c.l"
+{top=top-1;return T_closedFlowerBracket ;}
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
-#line 61 "c.l"
-return yytext[0];
+#line 64 "c.l"
+;	
 	YY_BREAK
 case 42:
+/* rule 40 can match eol */
 YY_RULE_SETUP
-#line 62 "c.l"
+#line 65 "c.l"
+;
+	YY_BREAK
+case 43:
+YY_RULE_SETUP
+#line 66 "c.l"
+return yytext[0];
+	YY_BREAK
+case 44:
+YY_RULE_SETUP
+#line 67 "c.l"
 ECHO;
 	YY_BREAK
 #line 1041 "lex.yy.c"
@@ -2045,6 +2066,85 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 62 "c.l"
+#line 69 "c.l"
+// Variable structure that consists of - :
+// + Variable name
+// + Line number to assosciate particual variable with - Line_T
+// + scope - Each opened block is assosciated with a scope number
+struct var
+{
+	char var_name[20];
+	char Line_t[100];
+	char type[100];
+	char value[100];
+	int scope;
+};
+struct scope
+{
+	struct var arr[20];
+	int up;
+};
 
+struct scope Symbol_Table[100];
+
+
+void Gen_Symbol_Table(char *text,int nm,int scp)
+{
+	int flag=0;
+	for(int i=0;i<=Symbol_Table[scp].up;i++)
+	{
+		if(strcmp(Symbol_Table[scp].arr[i].var_name,text)==0)
+		{
+			char buffer[20];
+			sprintf(buffer,"%d",nm);
+			flag=1;
+			strcat(Symbol_Table[scp].arr[i].Line_t,",");
+			strcat(Symbol_Table[scp].arr[i].Line_t,buffer);	
+			Symbol_Table[scp].arr[i].scope=scp;		
+			break;
+		}
+	}
+	if(flag==0)
+	{
+		char buffer[20];
+		sprintf(buffer,"%d",nm);
+		Symbol_Table[scp].up++;
+		int p=Symbol_Table[scp].up;
+		strcpy(Symbol_Table[scp].arr[p].var_name,text);
+		strcpy(Symbol_Table[scp].arr[p].Line_t,"");
+		strcat(Symbol_Table[scp].arr[p].Line_t,buffer);
+		Symbol_Table[scp].arr[p].scope=scp;
+	}
+	
+}
+
+void display()
+{
+	for(int i=0;i<=count;i++)
+	{
+		int h=Symbol_Table[i].up;
+		for (int j=1;j<=h;j++)
+		{
+			printf("Symbol:%s \t Scope:%d \t Line number: %s \t Type: %s \t Value: %s\n ",Symbol_Table[i].arr[j].var_name,Symbol_Table[i].arr[j].scope,Symbol_Table[i].arr[j].Line_t, Symbol_Table[i].arr[j].type, Symbol_Table[i].arr[j].value);
+		}
+	}	
+}
+
+void insert_in_st(char* type, char* id, int scp, char* value)
+{
+	
+	for(int i=0;i<=Symbol_Table[scp].up;i++)
+	{
+		if(strcmp(Symbol_Table[scp].arr[i].var_name,id)==0)
+		{
+			strcpy(Symbol_Table[scp].arr[i].type, type);
+			strcpy(Symbol_Table[scp].arr[i].value, value);
+		}
+	}
+}
+
+int yywrap()
+{
+	return 1;
+}
 
