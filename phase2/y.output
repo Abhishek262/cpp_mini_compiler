@@ -1,0 +1,2439 @@
+Terminals unused in grammar
+
+    T_keyword
+    T_return
+    T_InputStream
+    T_OutputStream
+    T_RelationalOperator
+    T_LogicalOperator
+    T_UnaryOperator
+    T_character
+    T_whiteSpace
+
+
+State 107 conflicts: 1 shift/reduce
+State 146 conflicts: 1 shift/reduce
+
+
+Grammar
+
+    0 $accept: Start $end
+
+    1 Start: T_int T_main T_openParenthesis T_closedParanthesis openflower block_end_flower
+
+    2 block_end_flower: stmt Multiple_stmts
+    3                 | closeflower
+
+    4 block: openflower block_end_flower
+    5      | stmt
+    6      | T_Semicolon
+
+    7 Multiple_stmts: stmt Multiple_stmts
+    8               | closeflower
+
+    9 stmt: expr T_Semicolon
+   10     | if_stmt
+   11     | while_stmt
+   12     | for_stmt
+   13     | Assignment_stmt T_Semicolon
+   14     | error T_Semicolon
+
+   15 for_stmt: T_for T_openParenthesis expr_or_empty_with_semicolon_and_assignment expr_or_empty_with_semicolon_and_assignment expr_or_empty_with_assignment_and_closed_parent block
+
+   16 while_stmt: T_while T_openParenthesis expr T_closedParanthesis block
+
+   17 if_stmt: T_if T_openParenthesis expr T_closedParanthesis block elseif_else_empty
+
+   18 elseif_else_empty: T_else T_if T_openParenthesis expr T_closedParanthesis block elseif_else_empty
+   19                  | T_else Multiple_stmts_not_if
+   20                  | T_else openflower block_end_flower
+   21                  | %empty
+
+   22 Multiple_stmts_not_if: stmt_without_if Multiple_stmts
+   23                      | T_Semicolon
+
+   24 stmt_without_if: expr T_Semicolon
+   25                | Assignment_stmt T_Semicolon
+   26                | while_stmt
+   27                | for_stmt
+
+   28 Assignment_stmt: T_identifier T_AssignmentOperator expr
+   29                | T_identifier T_shortHand expr
+   30                | T_type T_identifier T_AssignmentOperator expr_without_constants
+   31                | T_type T_identifier T_AssignmentOperator T_stringLiteral
+   32                | T_type T_identifier T_AssignmentOperator T_numericConstants
+   33                | T_int T_identifier T_AssignmentOperator expr_without_constants
+   34                | T_int T_identifier T_AssignmentOperator T_numericConstants
+
+   35 expr_or_empty_with_semicolon_and_assignment: expr_or_empty T_Semicolon
+   36                                            | Assignment_stmt T_Semicolon
+
+   37 expr_or_empty_with_assignment_and_closed_parent: expr_or_empty T_closedParanthesis
+   38                                                | Assignment_stmt T_closedParanthesis
+
+   39 expr_without_constants: T_identifier
+   40                       | expr T_plus expr
+   41                       | expr T_minus expr
+   42                       | expr T_divide expr
+   43                       | expr T_multiply expr
+   44                       | expr T_mod expr
+   45                       | expr T_LogicalAnd expr
+   46                       | expr T_LogicalOr expr
+   47                       | expr T_less expr
+   48                       | expr T_less_equal expr
+   49                       | expr T_greater expr
+   50                       | expr T_greater_equal expr
+   51                       | expr T_equal_equal expr
+   52                       | expr T_not_equal expr
+
+   53 expr: T_numericConstants
+   54     | T_stringLiteral
+   55     | T_identifier
+   56     | expr T_plus expr
+   57     | expr T_minus expr
+   58     | expr T_divide expr
+   59     | expr T_multiply expr
+   60     | expr T_mod expr
+   61     | expr T_LogicalAnd expr
+   62     | expr T_LogicalOr expr
+   63     | expr T_less expr
+   64     | expr T_less_equal expr
+   65     | expr T_greater expr
+   66     | expr T_greater_equal expr
+   67     | expr T_equal_equal expr
+   68     | expr T_not_equal expr
+
+   69 expr_or_empty: expr
+   70              | %empty
+
+   71 openflower: T_openFlowerBracket
+
+   72 closeflower: T_closedFlowerBracket
+
+
+Terminals, with rules where they appear
+
+    $end (0) 0
+    error (256) 14
+    T_keyword <str> (258)
+    T_int <str> (259) 1 33 34
+    T_main <str> (260) 1
+    T_type <str> (261) 30 31 32
+    T_return <str> (262)
+    T_for <str> (263) 15
+    T_if <str> (264) 17 18
+    T_else <str> (265) 18 19 20
+    T_while <str> (266) 16
+    T_InputStream <str> (267)
+    T_OutputStream <str> (268)
+    T_openParenthesis <str> (269) 1 15 16 17 18
+    T_closedParanthesis <str> (270) 1 16 17 18 37 38
+    T_openFlowerBracket <str> (271) 71
+    T_closedFlowerBracket <str> (272) 72
+    T_RelationalOperator <str> (273)
+    T_LogicalOperator <str> (274)
+    T_UnaryOperator <str> (275)
+    T_AssignmentOperator <str> (276) 28 30 31 32 33 34
+    T_Semicolon <str> (277) 6 9 13 14 23 24 25 35 36
+    T_identifier <str> (278) 28 29 30 31 32 33 34 39 55
+    T_numericConstants <str> (279) 32 34 53
+    T_stringLiteral <str> (280) 31 54
+    T_character <str> (281)
+    T_plus <str> (282) 40 56
+    T_minus <str> (283) 41 57
+    T_mod <str> (284) 44 60
+    T_divide <str> (285) 42 58
+    T_multiply <str> (286) 43 59
+    T_whiteSpace <str> (287)
+    T_shortHand <str> (288) 29
+    T_LogicalAnd (289) 45 61
+    T_LogicalOr (290) 46 62
+    T_less (291) 47 63
+    T_less_equal (292) 48 64
+    T_greater (293) 49 65
+    T_greater_equal (294) 50 66
+    T_equal_equal (295) 51 67
+    T_not_equal (296) 52 68
+
+
+Nonterminals, with rules where they appear
+
+    $accept (42)
+        on left: 0
+    Start (43)
+        on left: 1
+        on right: 0
+    block_end_flower (44)
+        on left: 2 3
+        on right: 1 4 20
+    block (45)
+        on left: 4 5 6
+        on right: 15 16 17 18
+    Multiple_stmts (46)
+        on left: 7 8
+        on right: 2 7 22
+    stmt (47)
+        on left: 9 10 11 12 13 14
+        on right: 2 5 7
+    for_stmt (48)
+        on left: 15
+        on right: 12 27
+    while_stmt (49)
+        on left: 16
+        on right: 11 26
+    if_stmt (50)
+        on left: 17
+        on right: 10
+    elseif_else_empty (51)
+        on left: 18 19 20 21
+        on right: 17 18
+    Multiple_stmts_not_if (52)
+        on left: 22 23
+        on right: 19
+    stmt_without_if (53)
+        on left: 24 25 26 27
+        on right: 22
+    Assignment_stmt (54)
+        on left: 28 29 30 31 32 33 34
+        on right: 13 25 36 38
+    expr_or_empty_with_semicolon_and_assignment (55)
+        on left: 35 36
+        on right: 15
+    expr_or_empty_with_assignment_and_closed_parent (56)
+        on left: 37 38
+        on right: 15
+    expr_without_constants (57)
+        on left: 39 40 41 42 43 44 45 46 47 48 49 50 51 52
+        on right: 30 33
+    expr (58)
+        on left: 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68
+        on right: 9 16 17 18 24 28 29 40 41 42 43 44 45 46 47 48 49 50 51 52 56 57 58 59 60 61 62 63 64 65 66 67 68 69
+    expr_or_empty (59)
+        on left: 69 70
+        on right: 35 37
+    openflower (60)
+        on left: 71
+        on right: 1 4 20
+    closeflower (61)
+        on left: 72
+        on right: 3 8
+
+
+State 0
+
+    0 $accept: . Start $end
+
+    T_int  shift, and go to state 1
+
+    Start  go to state 2
+
+
+State 1
+
+    1 Start: T_int . T_main T_openParenthesis T_closedParanthesis openflower block_end_flower
+
+    T_main  shift, and go to state 3
+
+
+State 2
+
+    0 $accept: Start . $end
+
+    $end  shift, and go to state 4
+
+
+State 3
+
+    1 Start: T_int T_main . T_openParenthesis T_closedParanthesis openflower block_end_flower
+
+    T_openParenthesis  shift, and go to state 5
+
+
+State 4
+
+    0 $accept: Start $end .
+
+    $default  accept
+
+
+State 5
+
+    1 Start: T_int T_main T_openParenthesis . T_closedParanthesis openflower block_end_flower
+
+    T_closedParanthesis  shift, and go to state 6
+
+
+State 6
+
+    1 Start: T_int T_main T_openParenthesis T_closedParanthesis . openflower block_end_flower
+
+    T_openFlowerBracket  shift, and go to state 7
+
+    openflower  go to state 8
+
+
+State 7
+
+   71 openflower: T_openFlowerBracket .
+
+    $default  reduce using rule 71 (openflower)
+
+
+State 8
+
+    1 Start: T_int T_main T_openParenthesis T_closedParanthesis openflower . block_end_flower
+
+    error                  shift, and go to state 9
+    T_int                  shift, and go to state 10
+    T_type                 shift, and go to state 11
+    T_for                  shift, and go to state 12
+    T_if                   shift, and go to state 13
+    T_while                shift, and go to state 14
+    T_closedFlowerBracket  shift, and go to state 15
+    T_identifier           shift, and go to state 16
+    T_numericConstants     shift, and go to state 17
+    T_stringLiteral        shift, and go to state 18
+
+    block_end_flower  go to state 19
+    stmt              go to state 20
+    for_stmt          go to state 21
+    while_stmt        go to state 22
+    if_stmt           go to state 23
+    Assignment_stmt   go to state 24
+    expr              go to state 25
+    closeflower       go to state 26
+
+
+State 9
+
+   14 stmt: error . T_Semicolon
+
+    T_Semicolon  shift, and go to state 27
+
+
+State 10
+
+   33 Assignment_stmt: T_int . T_identifier T_AssignmentOperator expr_without_constants
+   34                | T_int . T_identifier T_AssignmentOperator T_numericConstants
+
+    T_identifier  shift, and go to state 28
+
+
+State 11
+
+   30 Assignment_stmt: T_type . T_identifier T_AssignmentOperator expr_without_constants
+   31                | T_type . T_identifier T_AssignmentOperator T_stringLiteral
+   32                | T_type . T_identifier T_AssignmentOperator T_numericConstants
+
+    T_identifier  shift, and go to state 29
+
+
+State 12
+
+   15 for_stmt: T_for . T_openParenthesis expr_or_empty_with_semicolon_and_assignment expr_or_empty_with_semicolon_and_assignment expr_or_empty_with_assignment_and_closed_parent block
+
+    T_openParenthesis  shift, and go to state 30
+
+
+State 13
+
+   17 if_stmt: T_if . T_openParenthesis expr T_closedParanthesis block elseif_else_empty
+
+    T_openParenthesis  shift, and go to state 31
+
+
+State 14
+
+   16 while_stmt: T_while . T_openParenthesis expr T_closedParanthesis block
+
+    T_openParenthesis  shift, and go to state 32
+
+
+State 15
+
+   72 closeflower: T_closedFlowerBracket .
+
+    $default  reduce using rule 72 (closeflower)
+
+
+State 16
+
+   28 Assignment_stmt: T_identifier . T_AssignmentOperator expr
+   29                | T_identifier . T_shortHand expr
+   55 expr: T_identifier .
+
+    T_AssignmentOperator  shift, and go to state 33
+    T_shortHand           shift, and go to state 34
+
+    $default  reduce using rule 55 (expr)
+
+
+State 17
+
+   53 expr: T_numericConstants .
+
+    $default  reduce using rule 53 (expr)
+
+
+State 18
+
+   54 expr: T_stringLiteral .
+
+    $default  reduce using rule 54 (expr)
+
+
+State 19
+
+    1 Start: T_int T_main T_openParenthesis T_closedParanthesis openflower block_end_flower .
+
+    $default  reduce using rule 1 (Start)
+
+
+State 20
+
+    2 block_end_flower: stmt . Multiple_stmts
+
+    error                  shift, and go to state 9
+    T_int                  shift, and go to state 10
+    T_type                 shift, and go to state 11
+    T_for                  shift, and go to state 12
+    T_if                   shift, and go to state 13
+    T_while                shift, and go to state 14
+    T_closedFlowerBracket  shift, and go to state 15
+    T_identifier           shift, and go to state 16
+    T_numericConstants     shift, and go to state 17
+    T_stringLiteral        shift, and go to state 18
+
+    Multiple_stmts   go to state 35
+    stmt             go to state 36
+    for_stmt         go to state 21
+    while_stmt       go to state 22
+    if_stmt          go to state 23
+    Assignment_stmt  go to state 24
+    expr             go to state 25
+    closeflower      go to state 37
+
+
+State 21
+
+   12 stmt: for_stmt .
+
+    $default  reduce using rule 12 (stmt)
+
+
+State 22
+
+   11 stmt: while_stmt .
+
+    $default  reduce using rule 11 (stmt)
+
+
+State 23
+
+   10 stmt: if_stmt .
+
+    $default  reduce using rule 10 (stmt)
+
+
+State 24
+
+   13 stmt: Assignment_stmt . T_Semicolon
+
+    T_Semicolon  shift, and go to state 38
+
+
+State 25
+
+    9 stmt: expr . T_Semicolon
+   56 expr: expr . T_plus expr
+   57     | expr . T_minus expr
+   58     | expr . T_divide expr
+   59     | expr . T_multiply expr
+   60     | expr . T_mod expr
+   61     | expr . T_LogicalAnd expr
+   62     | expr . T_LogicalOr expr
+   63     | expr . T_less expr
+   64     | expr . T_less_equal expr
+   65     | expr . T_greater expr
+   66     | expr . T_greater_equal expr
+   67     | expr . T_equal_equal expr
+   68     | expr . T_not_equal expr
+
+    T_Semicolon      shift, and go to state 39
+    T_plus           shift, and go to state 40
+    T_minus          shift, and go to state 41
+    T_mod            shift, and go to state 42
+    T_divide         shift, and go to state 43
+    T_multiply       shift, and go to state 44
+    T_LogicalAnd     shift, and go to state 45
+    T_LogicalOr      shift, and go to state 46
+    T_less           shift, and go to state 47
+    T_less_equal     shift, and go to state 48
+    T_greater        shift, and go to state 49
+    T_greater_equal  shift, and go to state 50
+    T_equal_equal    shift, and go to state 51
+    T_not_equal      shift, and go to state 52
+
+
+State 26
+
+    3 block_end_flower: closeflower .
+
+    $default  reduce using rule 3 (block_end_flower)
+
+
+State 27
+
+   14 stmt: error T_Semicolon .
+
+    $default  reduce using rule 14 (stmt)
+
+
+State 28
+
+   33 Assignment_stmt: T_int T_identifier . T_AssignmentOperator expr_without_constants
+   34                | T_int T_identifier . T_AssignmentOperator T_numericConstants
+
+    T_AssignmentOperator  shift, and go to state 53
+
+
+State 29
+
+   30 Assignment_stmt: T_type T_identifier . T_AssignmentOperator expr_without_constants
+   31                | T_type T_identifier . T_AssignmentOperator T_stringLiteral
+   32                | T_type T_identifier . T_AssignmentOperator T_numericConstants
+
+    T_AssignmentOperator  shift, and go to state 54
+
+
+State 30
+
+   15 for_stmt: T_for T_openParenthesis . expr_or_empty_with_semicolon_and_assignment expr_or_empty_with_semicolon_and_assignment expr_or_empty_with_assignment_and_closed_parent block
+
+    T_int               shift, and go to state 10
+    T_type              shift, and go to state 11
+    T_identifier        shift, and go to state 16
+    T_numericConstants  shift, and go to state 17
+    T_stringLiteral     shift, and go to state 18
+
+    $default  reduce using rule 70 (expr_or_empty)
+
+    Assignment_stmt                              go to state 55
+    expr_or_empty_with_semicolon_and_assignment  go to state 56
+    expr                                         go to state 57
+    expr_or_empty                                go to state 58
+
+
+State 31
+
+   17 if_stmt: T_if T_openParenthesis . expr T_closedParanthesis block elseif_else_empty
+
+    T_identifier        shift, and go to state 59
+    T_numericConstants  shift, and go to state 17
+    T_stringLiteral     shift, and go to state 18
+
+    expr  go to state 60
+
+
+State 32
+
+   16 while_stmt: T_while T_openParenthesis . expr T_closedParanthesis block
+
+    T_identifier        shift, and go to state 59
+    T_numericConstants  shift, and go to state 17
+    T_stringLiteral     shift, and go to state 18
+
+    expr  go to state 61
+
+
+State 33
+
+   28 Assignment_stmt: T_identifier T_AssignmentOperator . expr
+
+    T_identifier        shift, and go to state 59
+    T_numericConstants  shift, and go to state 17
+    T_stringLiteral     shift, and go to state 18
+
+    expr  go to state 62
+
+
+State 34
+
+   29 Assignment_stmt: T_identifier T_shortHand . expr
+
+    T_identifier        shift, and go to state 59
+    T_numericConstants  shift, and go to state 17
+    T_stringLiteral     shift, and go to state 18
+
+    expr  go to state 63
+
+
+State 35
+
+    2 block_end_flower: stmt Multiple_stmts .
+
+    $default  reduce using rule 2 (block_end_flower)
+
+
+State 36
+
+    7 Multiple_stmts: stmt . Multiple_stmts
+
+    error                  shift, and go to state 9
+    T_int                  shift, and go to state 10
+    T_type                 shift, and go to state 11
+    T_for                  shift, and go to state 12
+    T_if                   shift, and go to state 13
+    T_while                shift, and go to state 14
+    T_closedFlowerBracket  shift, and go to state 15
+    T_identifier           shift, and go to state 16
+    T_numericConstants     shift, and go to state 17
+    T_stringLiteral        shift, and go to state 18
+
+    Multiple_stmts   go to state 64
+    stmt             go to state 36
+    for_stmt         go to state 21
+    while_stmt       go to state 22
+    if_stmt          go to state 23
+    Assignment_stmt  go to state 24
+    expr             go to state 25
+    closeflower      go to state 37
+
+
+State 37
+
+    8 Multiple_stmts: closeflower .
+
+    $default  reduce using rule 8 (Multiple_stmts)
+
+
+State 38
+
+   13 stmt: Assignment_stmt T_Semicolon .
+
+    $default  reduce using rule 13 (stmt)
+
+
+State 39
+
+    9 stmt: expr T_Semicolon .
+
+    $default  reduce using rule 9 (stmt)
+
+
+State 40
+
+   56 expr: expr T_plus . expr
+
+    T_identifier        shift, and go to state 59
+    T_numericConstants  shift, and go to state 17
+    T_stringLiteral     shift, and go to state 18
+
+    expr  go to state 65
+
+
+State 41
+
+   57 expr: expr T_minus . expr
+
+    T_identifier        shift, and go to state 59
+    T_numericConstants  shift, and go to state 17
+    T_stringLiteral     shift, and go to state 18
+
+    expr  go to state 66
+
+
+State 42
+
+   60 expr: expr T_mod . expr
+
+    T_identifier        shift, and go to state 59
+    T_numericConstants  shift, and go to state 17
+    T_stringLiteral     shift, and go to state 18
+
+    expr  go to state 67
+
+
+State 43
+
+   58 expr: expr T_divide . expr
+
+    T_identifier        shift, and go to state 59
+    T_numericConstants  shift, and go to state 17
+    T_stringLiteral     shift, and go to state 18
+
+    expr  go to state 68
+
+
+State 44
+
+   59 expr: expr T_multiply . expr
+
+    T_identifier        shift, and go to state 59
+    T_numericConstants  shift, and go to state 17
+    T_stringLiteral     shift, and go to state 18
+
+    expr  go to state 69
+
+
+State 45
+
+   61 expr: expr T_LogicalAnd . expr
+
+    T_identifier        shift, and go to state 59
+    T_numericConstants  shift, and go to state 17
+    T_stringLiteral     shift, and go to state 18
+
+    expr  go to state 70
+
+
+State 46
+
+   62 expr: expr T_LogicalOr . expr
+
+    T_identifier        shift, and go to state 59
+    T_numericConstants  shift, and go to state 17
+    T_stringLiteral     shift, and go to state 18
+
+    expr  go to state 71
+
+
+State 47
+
+   63 expr: expr T_less . expr
+
+    T_identifier        shift, and go to state 59
+    T_numericConstants  shift, and go to state 17
+    T_stringLiteral     shift, and go to state 18
+
+    expr  go to state 72
+
+
+State 48
+
+   64 expr: expr T_less_equal . expr
+
+    T_identifier        shift, and go to state 59
+    T_numericConstants  shift, and go to state 17
+    T_stringLiteral     shift, and go to state 18
+
+    expr  go to state 73
+
+
+State 49
+
+   65 expr: expr T_greater . expr
+
+    T_identifier        shift, and go to state 59
+    T_numericConstants  shift, and go to state 17
+    T_stringLiteral     shift, and go to state 18
+
+    expr  go to state 74
+
+
+State 50
+
+   66 expr: expr T_greater_equal . expr
+
+    T_identifier        shift, and go to state 59
+    T_numericConstants  shift, and go to state 17
+    T_stringLiteral     shift, and go to state 18
+
+    expr  go to state 75
+
+
+State 51
+
+   67 expr: expr T_equal_equal . expr
+
+    T_identifier        shift, and go to state 59
+    T_numericConstants  shift, and go to state 17
+    T_stringLiteral     shift, and go to state 18
+
+    expr  go to state 76
+
+
+State 52
+
+   68 expr: expr T_not_equal . expr
+
+    T_identifier        shift, and go to state 59
+    T_numericConstants  shift, and go to state 17
+    T_stringLiteral     shift, and go to state 18
+
+    expr  go to state 77
+
+
+State 53
+
+   33 Assignment_stmt: T_int T_identifier T_AssignmentOperator . expr_without_constants
+   34                | T_int T_identifier T_AssignmentOperator . T_numericConstants
+
+    T_identifier        shift, and go to state 78
+    T_numericConstants  shift, and go to state 79
+    T_stringLiteral     shift, and go to state 18
+
+    expr_without_constants  go to state 80
+    expr                    go to state 81
+
+
+State 54
+
+   30 Assignment_stmt: T_type T_identifier T_AssignmentOperator . expr_without_constants
+   31                | T_type T_identifier T_AssignmentOperator . T_stringLiteral
+   32                | T_type T_identifier T_AssignmentOperator . T_numericConstants
+
+    T_identifier        shift, and go to state 78
+    T_numericConstants  shift, and go to state 82
+    T_stringLiteral     shift, and go to state 83
+
+    expr_without_constants  go to state 84
+    expr                    go to state 81
+
+
+State 55
+
+   36 expr_or_empty_with_semicolon_and_assignment: Assignment_stmt . T_Semicolon
+
+    T_Semicolon  shift, and go to state 85
+
+
+State 56
+
+   15 for_stmt: T_for T_openParenthesis expr_or_empty_with_semicolon_and_assignment . expr_or_empty_with_semicolon_and_assignment expr_or_empty_with_assignment_and_closed_parent block
+
+    T_int               shift, and go to state 10
+    T_type              shift, and go to state 11
+    T_identifier        shift, and go to state 16
+    T_numericConstants  shift, and go to state 17
+    T_stringLiteral     shift, and go to state 18
+
+    $default  reduce using rule 70 (expr_or_empty)
+
+    Assignment_stmt                              go to state 55
+    expr_or_empty_with_semicolon_and_assignment  go to state 86
+    expr                                         go to state 57
+    expr_or_empty                                go to state 58
+
+
+State 57
+
+   56 expr: expr . T_plus expr
+   57     | expr . T_minus expr
+   58     | expr . T_divide expr
+   59     | expr . T_multiply expr
+   60     | expr . T_mod expr
+   61     | expr . T_LogicalAnd expr
+   62     | expr . T_LogicalOr expr
+   63     | expr . T_less expr
+   64     | expr . T_less_equal expr
+   65     | expr . T_greater expr
+   66     | expr . T_greater_equal expr
+   67     | expr . T_equal_equal expr
+   68     | expr . T_not_equal expr
+   69 expr_or_empty: expr .
+
+    T_plus           shift, and go to state 40
+    T_minus          shift, and go to state 41
+    T_mod            shift, and go to state 42
+    T_divide         shift, and go to state 43
+    T_multiply       shift, and go to state 44
+    T_LogicalAnd     shift, and go to state 45
+    T_LogicalOr      shift, and go to state 46
+    T_less           shift, and go to state 47
+    T_less_equal     shift, and go to state 48
+    T_greater        shift, and go to state 49
+    T_greater_equal  shift, and go to state 50
+    T_equal_equal    shift, and go to state 51
+    T_not_equal      shift, and go to state 52
+
+    $default  reduce using rule 69 (expr_or_empty)
+
+
+State 58
+
+   35 expr_or_empty_with_semicolon_and_assignment: expr_or_empty . T_Semicolon
+
+    T_Semicolon  shift, and go to state 87
+
+
+State 59
+
+   55 expr: T_identifier .
+
+    $default  reduce using rule 55 (expr)
+
+
+State 60
+
+   17 if_stmt: T_if T_openParenthesis expr . T_closedParanthesis block elseif_else_empty
+   56 expr: expr . T_plus expr
+   57     | expr . T_minus expr
+   58     | expr . T_divide expr
+   59     | expr . T_multiply expr
+   60     | expr . T_mod expr
+   61     | expr . T_LogicalAnd expr
+   62     | expr . T_LogicalOr expr
+   63     | expr . T_less expr
+   64     | expr . T_less_equal expr
+   65     | expr . T_greater expr
+   66     | expr . T_greater_equal expr
+   67     | expr . T_equal_equal expr
+   68     | expr . T_not_equal expr
+
+    T_closedParanthesis  shift, and go to state 88
+    T_plus               shift, and go to state 40
+    T_minus              shift, and go to state 41
+    T_mod                shift, and go to state 42
+    T_divide             shift, and go to state 43
+    T_multiply           shift, and go to state 44
+    T_LogicalAnd         shift, and go to state 45
+    T_LogicalOr          shift, and go to state 46
+    T_less               shift, and go to state 47
+    T_less_equal         shift, and go to state 48
+    T_greater            shift, and go to state 49
+    T_greater_equal      shift, and go to state 50
+    T_equal_equal        shift, and go to state 51
+    T_not_equal          shift, and go to state 52
+
+
+State 61
+
+   16 while_stmt: T_while T_openParenthesis expr . T_closedParanthesis block
+   56 expr: expr . T_plus expr
+   57     | expr . T_minus expr
+   58     | expr . T_divide expr
+   59     | expr . T_multiply expr
+   60     | expr . T_mod expr
+   61     | expr . T_LogicalAnd expr
+   62     | expr . T_LogicalOr expr
+   63     | expr . T_less expr
+   64     | expr . T_less_equal expr
+   65     | expr . T_greater expr
+   66     | expr . T_greater_equal expr
+   67     | expr . T_equal_equal expr
+   68     | expr . T_not_equal expr
+
+    T_closedParanthesis  shift, and go to state 89
+    T_plus               shift, and go to state 40
+    T_minus              shift, and go to state 41
+    T_mod                shift, and go to state 42
+    T_divide             shift, and go to state 43
+    T_multiply           shift, and go to state 44
+    T_LogicalAnd         shift, and go to state 45
+    T_LogicalOr          shift, and go to state 46
+    T_less               shift, and go to state 47
+    T_less_equal         shift, and go to state 48
+    T_greater            shift, and go to state 49
+    T_greater_equal      shift, and go to state 50
+    T_equal_equal        shift, and go to state 51
+    T_not_equal          shift, and go to state 52
+
+
+State 62
+
+   28 Assignment_stmt: T_identifier T_AssignmentOperator expr .
+   56 expr: expr . T_plus expr
+   57     | expr . T_minus expr
+   58     | expr . T_divide expr
+   59     | expr . T_multiply expr
+   60     | expr . T_mod expr
+   61     | expr . T_LogicalAnd expr
+   62     | expr . T_LogicalOr expr
+   63     | expr . T_less expr
+   64     | expr . T_less_equal expr
+   65     | expr . T_greater expr
+   66     | expr . T_greater_equal expr
+   67     | expr . T_equal_equal expr
+   68     | expr . T_not_equal expr
+
+    T_plus           shift, and go to state 40
+    T_minus          shift, and go to state 41
+    T_mod            shift, and go to state 42
+    T_divide         shift, and go to state 43
+    T_multiply       shift, and go to state 44
+    T_LogicalAnd     shift, and go to state 45
+    T_LogicalOr      shift, and go to state 46
+    T_less           shift, and go to state 47
+    T_less_equal     shift, and go to state 48
+    T_greater        shift, and go to state 49
+    T_greater_equal  shift, and go to state 50
+    T_equal_equal    shift, and go to state 51
+    T_not_equal      shift, and go to state 52
+
+    $default  reduce using rule 28 (Assignment_stmt)
+
+
+State 63
+
+   29 Assignment_stmt: T_identifier T_shortHand expr .
+   56 expr: expr . T_plus expr
+   57     | expr . T_minus expr
+   58     | expr . T_divide expr
+   59     | expr . T_multiply expr
+   60     | expr . T_mod expr
+   61     | expr . T_LogicalAnd expr
+   62     | expr . T_LogicalOr expr
+   63     | expr . T_less expr
+   64     | expr . T_less_equal expr
+   65     | expr . T_greater expr
+   66     | expr . T_greater_equal expr
+   67     | expr . T_equal_equal expr
+   68     | expr . T_not_equal expr
+
+    T_plus           shift, and go to state 40
+    T_minus          shift, and go to state 41
+    T_mod            shift, and go to state 42
+    T_divide         shift, and go to state 43
+    T_multiply       shift, and go to state 44
+    T_LogicalAnd     shift, and go to state 45
+    T_LogicalOr      shift, and go to state 46
+    T_less           shift, and go to state 47
+    T_less_equal     shift, and go to state 48
+    T_greater        shift, and go to state 49
+    T_greater_equal  shift, and go to state 50
+    T_equal_equal    shift, and go to state 51
+    T_not_equal      shift, and go to state 52
+
+    $default  reduce using rule 29 (Assignment_stmt)
+
+
+State 64
+
+    7 Multiple_stmts: stmt Multiple_stmts .
+
+    $default  reduce using rule 7 (Multiple_stmts)
+
+
+State 65
+
+   56 expr: expr . T_plus expr
+   56     | expr T_plus expr .
+   57     | expr . T_minus expr
+   58     | expr . T_divide expr
+   59     | expr . T_multiply expr
+   60     | expr . T_mod expr
+   61     | expr . T_LogicalAnd expr
+   62     | expr . T_LogicalOr expr
+   63     | expr . T_less expr
+   64     | expr . T_less_equal expr
+   65     | expr . T_greater expr
+   66     | expr . T_greater_equal expr
+   67     | expr . T_equal_equal expr
+   68     | expr . T_not_equal expr
+
+    T_mod       shift, and go to state 42
+    T_divide    shift, and go to state 43
+    T_multiply  shift, and go to state 44
+
+    $default  reduce using rule 56 (expr)
+
+
+State 66
+
+   56 expr: expr . T_plus expr
+   57     | expr . T_minus expr
+   57     | expr T_minus expr .
+   58     | expr . T_divide expr
+   59     | expr . T_multiply expr
+   60     | expr . T_mod expr
+   61     | expr . T_LogicalAnd expr
+   62     | expr . T_LogicalOr expr
+   63     | expr . T_less expr
+   64     | expr . T_less_equal expr
+   65     | expr . T_greater expr
+   66     | expr . T_greater_equal expr
+   67     | expr . T_equal_equal expr
+   68     | expr . T_not_equal expr
+
+    T_mod       shift, and go to state 42
+    T_divide    shift, and go to state 43
+    T_multiply  shift, and go to state 44
+
+    $default  reduce using rule 57 (expr)
+
+
+State 67
+
+   56 expr: expr . T_plus expr
+   57     | expr . T_minus expr
+   58     | expr . T_divide expr
+   59     | expr . T_multiply expr
+   60     | expr . T_mod expr
+   60     | expr T_mod expr .
+   61     | expr . T_LogicalAnd expr
+   62     | expr . T_LogicalOr expr
+   63     | expr . T_less expr
+   64     | expr . T_less_equal expr
+   65     | expr . T_greater expr
+   66     | expr . T_greater_equal expr
+   67     | expr . T_equal_equal expr
+   68     | expr . T_not_equal expr
+
+    $default  reduce using rule 60 (expr)
+
+
+State 68
+
+   56 expr: expr . T_plus expr
+   57     | expr . T_minus expr
+   58     | expr . T_divide expr
+   58     | expr T_divide expr .
+   59     | expr . T_multiply expr
+   60     | expr . T_mod expr
+   61     | expr . T_LogicalAnd expr
+   62     | expr . T_LogicalOr expr
+   63     | expr . T_less expr
+   64     | expr . T_less_equal expr
+   65     | expr . T_greater expr
+   66     | expr . T_greater_equal expr
+   67     | expr . T_equal_equal expr
+   68     | expr . T_not_equal expr
+
+    $default  reduce using rule 58 (expr)
+
+
+State 69
+
+   56 expr: expr . T_plus expr
+   57     | expr . T_minus expr
+   58     | expr . T_divide expr
+   59     | expr . T_multiply expr
+   59     | expr T_multiply expr .
+   60     | expr . T_mod expr
+   61     | expr . T_LogicalAnd expr
+   62     | expr . T_LogicalOr expr
+   63     | expr . T_less expr
+   64     | expr . T_less_equal expr
+   65     | expr . T_greater expr
+   66     | expr . T_greater_equal expr
+   67     | expr . T_equal_equal expr
+   68     | expr . T_not_equal expr
+
+    $default  reduce using rule 59 (expr)
+
+
+State 70
+
+   56 expr: expr . T_plus expr
+   57     | expr . T_minus expr
+   58     | expr . T_divide expr
+   59     | expr . T_multiply expr
+   60     | expr . T_mod expr
+   61     | expr . T_LogicalAnd expr
+   61     | expr T_LogicalAnd expr .
+   62     | expr . T_LogicalOr expr
+   63     | expr . T_less expr
+   64     | expr . T_less_equal expr
+   65     | expr . T_greater expr
+   66     | expr . T_greater_equal expr
+   67     | expr . T_equal_equal expr
+   68     | expr . T_not_equal expr
+
+    T_plus           shift, and go to state 40
+    T_minus          shift, and go to state 41
+    T_mod            shift, and go to state 42
+    T_divide         shift, and go to state 43
+    T_multiply       shift, and go to state 44
+    T_less           shift, and go to state 47
+    T_less_equal     shift, and go to state 48
+    T_greater        shift, and go to state 49
+    T_greater_equal  shift, and go to state 50
+    T_equal_equal    shift, and go to state 51
+    T_not_equal      shift, and go to state 52
+
+    $default  reduce using rule 61 (expr)
+
+
+State 71
+
+   56 expr: expr . T_plus expr
+   57     | expr . T_minus expr
+   58     | expr . T_divide expr
+   59     | expr . T_multiply expr
+   60     | expr . T_mod expr
+   61     | expr . T_LogicalAnd expr
+   62     | expr . T_LogicalOr expr
+   62     | expr T_LogicalOr expr .
+   63     | expr . T_less expr
+   64     | expr . T_less_equal expr
+   65     | expr . T_greater expr
+   66     | expr . T_greater_equal expr
+   67     | expr . T_equal_equal expr
+   68     | expr . T_not_equal expr
+
+    T_plus           shift, and go to state 40
+    T_minus          shift, and go to state 41
+    T_mod            shift, and go to state 42
+    T_divide         shift, and go to state 43
+    T_multiply       shift, and go to state 44
+    T_less           shift, and go to state 47
+    T_less_equal     shift, and go to state 48
+    T_greater        shift, and go to state 49
+    T_greater_equal  shift, and go to state 50
+    T_equal_equal    shift, and go to state 51
+    T_not_equal      shift, and go to state 52
+
+    $default  reduce using rule 62 (expr)
+
+
+State 72
+
+   56 expr: expr . T_plus expr
+   57     | expr . T_minus expr
+   58     | expr . T_divide expr
+   59     | expr . T_multiply expr
+   60     | expr . T_mod expr
+   61     | expr . T_LogicalAnd expr
+   62     | expr . T_LogicalOr expr
+   63     | expr . T_less expr
+   63     | expr T_less expr .
+   64     | expr . T_less_equal expr
+   65     | expr . T_greater expr
+   66     | expr . T_greater_equal expr
+   67     | expr . T_equal_equal expr
+   68     | expr . T_not_equal expr
+
+    T_plus      shift, and go to state 40
+    T_minus     shift, and go to state 41
+    T_mod       shift, and go to state 42
+    T_divide    shift, and go to state 43
+    T_multiply  shift, and go to state 44
+
+    $default  reduce using rule 63 (expr)
+
+
+State 73
+
+   56 expr: expr . T_plus expr
+   57     | expr . T_minus expr
+   58     | expr . T_divide expr
+   59     | expr . T_multiply expr
+   60     | expr . T_mod expr
+   61     | expr . T_LogicalAnd expr
+   62     | expr . T_LogicalOr expr
+   63     | expr . T_less expr
+   64     | expr . T_less_equal expr
+   64     | expr T_less_equal expr .
+   65     | expr . T_greater expr
+   66     | expr . T_greater_equal expr
+   67     | expr . T_equal_equal expr
+   68     | expr . T_not_equal expr
+
+    T_plus      shift, and go to state 40
+    T_minus     shift, and go to state 41
+    T_mod       shift, and go to state 42
+    T_divide    shift, and go to state 43
+    T_multiply  shift, and go to state 44
+
+    $default  reduce using rule 64 (expr)
+
+
+State 74
+
+   56 expr: expr . T_plus expr
+   57     | expr . T_minus expr
+   58     | expr . T_divide expr
+   59     | expr . T_multiply expr
+   60     | expr . T_mod expr
+   61     | expr . T_LogicalAnd expr
+   62     | expr . T_LogicalOr expr
+   63     | expr . T_less expr
+   64     | expr . T_less_equal expr
+   65     | expr . T_greater expr
+   65     | expr T_greater expr .
+   66     | expr . T_greater_equal expr
+   67     | expr . T_equal_equal expr
+   68     | expr . T_not_equal expr
+
+    T_plus      shift, and go to state 40
+    T_minus     shift, and go to state 41
+    T_mod       shift, and go to state 42
+    T_divide    shift, and go to state 43
+    T_multiply  shift, and go to state 44
+
+    $default  reduce using rule 65 (expr)
+
+
+State 75
+
+   56 expr: expr . T_plus expr
+   57     | expr . T_minus expr
+   58     | expr . T_divide expr
+   59     | expr . T_multiply expr
+   60     | expr . T_mod expr
+   61     | expr . T_LogicalAnd expr
+   62     | expr . T_LogicalOr expr
+   63     | expr . T_less expr
+   64     | expr . T_less_equal expr
+   65     | expr . T_greater expr
+   66     | expr . T_greater_equal expr
+   66     | expr T_greater_equal expr .
+   67     | expr . T_equal_equal expr
+   68     | expr . T_not_equal expr
+
+    T_plus      shift, and go to state 40
+    T_minus     shift, and go to state 41
+    T_mod       shift, and go to state 42
+    T_divide    shift, and go to state 43
+    T_multiply  shift, and go to state 44
+
+    $default  reduce using rule 66 (expr)
+
+
+State 76
+
+   56 expr: expr . T_plus expr
+   57     | expr . T_minus expr
+   58     | expr . T_divide expr
+   59     | expr . T_multiply expr
+   60     | expr . T_mod expr
+   61     | expr . T_LogicalAnd expr
+   62     | expr . T_LogicalOr expr
+   63     | expr . T_less expr
+   64     | expr . T_less_equal expr
+   65     | expr . T_greater expr
+   66     | expr . T_greater_equal expr
+   67     | expr . T_equal_equal expr
+   67     | expr T_equal_equal expr .
+   68     | expr . T_not_equal expr
+
+    T_plus      shift, and go to state 40
+    T_minus     shift, and go to state 41
+    T_mod       shift, and go to state 42
+    T_divide    shift, and go to state 43
+    T_multiply  shift, and go to state 44
+
+    $default  reduce using rule 67 (expr)
+
+
+State 77
+
+   56 expr: expr . T_plus expr
+   57     | expr . T_minus expr
+   58     | expr . T_divide expr
+   59     | expr . T_multiply expr
+   60     | expr . T_mod expr
+   61     | expr . T_LogicalAnd expr
+   62     | expr . T_LogicalOr expr
+   63     | expr . T_less expr
+   64     | expr . T_less_equal expr
+   65     | expr . T_greater expr
+   66     | expr . T_greater_equal expr
+   67     | expr . T_equal_equal expr
+   68     | expr . T_not_equal expr
+   68     | expr T_not_equal expr .
+
+    T_plus      shift, and go to state 40
+    T_minus     shift, and go to state 41
+    T_mod       shift, and go to state 42
+    T_divide    shift, and go to state 43
+    T_multiply  shift, and go to state 44
+
+    $default  reduce using rule 68 (expr)
+
+
+State 78
+
+   39 expr_without_constants: T_identifier .
+   55 expr: T_identifier .
+
+    T_closedParanthesis  reduce using rule 39 (expr_without_constants)
+    T_Semicolon          reduce using rule 39 (expr_without_constants)
+    $default             reduce using rule 55 (expr)
+
+
+State 79
+
+   34 Assignment_stmt: T_int T_identifier T_AssignmentOperator T_numericConstants .
+   53 expr: T_numericConstants .
+
+    T_closedParanthesis  reduce using rule 34 (Assignment_stmt)
+    T_Semicolon          reduce using rule 34 (Assignment_stmt)
+    $default             reduce using rule 53 (expr)
+
+
+State 80
+
+   33 Assignment_stmt: T_int T_identifier T_AssignmentOperator expr_without_constants .
+
+    $default  reduce using rule 33 (Assignment_stmt)
+
+
+State 81
+
+   40 expr_without_constants: expr . T_plus expr
+   41                       | expr . T_minus expr
+   42                       | expr . T_divide expr
+   43                       | expr . T_multiply expr
+   44                       | expr . T_mod expr
+   45                       | expr . T_LogicalAnd expr
+   46                       | expr . T_LogicalOr expr
+   47                       | expr . T_less expr
+   48                       | expr . T_less_equal expr
+   49                       | expr . T_greater expr
+   50                       | expr . T_greater_equal expr
+   51                       | expr . T_equal_equal expr
+   52                       | expr . T_not_equal expr
+   56 expr: expr . T_plus expr
+   57     | expr . T_minus expr
+   58     | expr . T_divide expr
+   59     | expr . T_multiply expr
+   60     | expr . T_mod expr
+   61     | expr . T_LogicalAnd expr
+   62     | expr . T_LogicalOr expr
+   63     | expr . T_less expr
+   64     | expr . T_less_equal expr
+   65     | expr . T_greater expr
+   66     | expr . T_greater_equal expr
+   67     | expr . T_equal_equal expr
+   68     | expr . T_not_equal expr
+
+    T_plus           shift, and go to state 90
+    T_minus          shift, and go to state 91
+    T_mod            shift, and go to state 92
+    T_divide         shift, and go to state 93
+    T_multiply       shift, and go to state 94
+    T_LogicalAnd     shift, and go to state 95
+    T_LogicalOr      shift, and go to state 96
+    T_less           shift, and go to state 97
+    T_less_equal     shift, and go to state 98
+    T_greater        shift, and go to state 99
+    T_greater_equal  shift, and go to state 100
+    T_equal_equal    shift, and go to state 101
+    T_not_equal      shift, and go to state 102
+
+
+State 82
+
+   32 Assignment_stmt: T_type T_identifier T_AssignmentOperator T_numericConstants .
+   53 expr: T_numericConstants .
+
+    T_closedParanthesis  reduce using rule 32 (Assignment_stmt)
+    T_Semicolon          reduce using rule 32 (Assignment_stmt)
+    $default             reduce using rule 53 (expr)
+
+
+State 83
+
+   31 Assignment_stmt: T_type T_identifier T_AssignmentOperator T_stringLiteral .
+   54 expr: T_stringLiteral .
+
+    T_closedParanthesis  reduce using rule 31 (Assignment_stmt)
+    T_Semicolon          reduce using rule 31 (Assignment_stmt)
+    $default             reduce using rule 54 (expr)
+
+
+State 84
+
+   30 Assignment_stmt: T_type T_identifier T_AssignmentOperator expr_without_constants .
+
+    $default  reduce using rule 30 (Assignment_stmt)
+
+
+State 85
+
+   36 expr_or_empty_with_semicolon_and_assignment: Assignment_stmt T_Semicolon .
+
+    $default  reduce using rule 36 (expr_or_empty_with_semicolon_and_assignment)
+
+
+State 86
+
+   15 for_stmt: T_for T_openParenthesis expr_or_empty_with_semicolon_and_assignment expr_or_empty_with_semicolon_and_assignment . expr_or_empty_with_assignment_and_closed_parent block
+
+    T_int               shift, and go to state 10
+    T_type              shift, and go to state 11
+    T_identifier        shift, and go to state 16
+    T_numericConstants  shift, and go to state 17
+    T_stringLiteral     shift, and go to state 18
+
+    $default  reduce using rule 70 (expr_or_empty)
+
+    Assignment_stmt                                  go to state 103
+    expr_or_empty_with_assignment_and_closed_parent  go to state 104
+    expr                                             go to state 57
+    expr_or_empty                                    go to state 105
+
+
+State 87
+
+   35 expr_or_empty_with_semicolon_and_assignment: expr_or_empty T_Semicolon .
+
+    $default  reduce using rule 35 (expr_or_empty_with_semicolon_and_assignment)
+
+
+State 88
+
+   17 if_stmt: T_if T_openParenthesis expr T_closedParanthesis . block elseif_else_empty
+
+    error                shift, and go to state 9
+    T_int                shift, and go to state 10
+    T_type               shift, and go to state 11
+    T_for                shift, and go to state 12
+    T_if                 shift, and go to state 13
+    T_while              shift, and go to state 14
+    T_openFlowerBracket  shift, and go to state 7
+    T_Semicolon          shift, and go to state 106
+    T_identifier         shift, and go to state 16
+    T_numericConstants   shift, and go to state 17
+    T_stringLiteral      shift, and go to state 18
+
+    block            go to state 107
+    stmt             go to state 108
+    for_stmt         go to state 21
+    while_stmt       go to state 22
+    if_stmt          go to state 23
+    Assignment_stmt  go to state 24
+    expr             go to state 25
+    openflower       go to state 109
+
+
+State 89
+
+   16 while_stmt: T_while T_openParenthesis expr T_closedParanthesis . block
+
+    error                shift, and go to state 9
+    T_int                shift, and go to state 10
+    T_type               shift, and go to state 11
+    T_for                shift, and go to state 12
+    T_if                 shift, and go to state 13
+    T_while              shift, and go to state 14
+    T_openFlowerBracket  shift, and go to state 7
+    T_Semicolon          shift, and go to state 106
+    T_identifier         shift, and go to state 16
+    T_numericConstants   shift, and go to state 17
+    T_stringLiteral      shift, and go to state 18
+
+    block            go to state 110
+    stmt             go to state 108
+    for_stmt         go to state 21
+    while_stmt       go to state 22
+    if_stmt          go to state 23
+    Assignment_stmt  go to state 24
+    expr             go to state 25
+    openflower       go to state 109
+
+
+State 90
+
+   40 expr_without_constants: expr T_plus . expr
+   56 expr: expr T_plus . expr
+
+    T_identifier        shift, and go to state 59
+    T_numericConstants  shift, and go to state 17
+    T_stringLiteral     shift, and go to state 18
+
+    expr  go to state 111
+
+
+State 91
+
+   41 expr_without_constants: expr T_minus . expr
+   57 expr: expr T_minus . expr
+
+    T_identifier        shift, and go to state 59
+    T_numericConstants  shift, and go to state 17
+    T_stringLiteral     shift, and go to state 18
+
+    expr  go to state 112
+
+
+State 92
+
+   44 expr_without_constants: expr T_mod . expr
+   60 expr: expr T_mod . expr
+
+    T_identifier        shift, and go to state 59
+    T_numericConstants  shift, and go to state 17
+    T_stringLiteral     shift, and go to state 18
+
+    expr  go to state 113
+
+
+State 93
+
+   42 expr_without_constants: expr T_divide . expr
+   58 expr: expr T_divide . expr
+
+    T_identifier        shift, and go to state 59
+    T_numericConstants  shift, and go to state 17
+    T_stringLiteral     shift, and go to state 18
+
+    expr  go to state 114
+
+
+State 94
+
+   43 expr_without_constants: expr T_multiply . expr
+   59 expr: expr T_multiply . expr
+
+    T_identifier        shift, and go to state 59
+    T_numericConstants  shift, and go to state 17
+    T_stringLiteral     shift, and go to state 18
+
+    expr  go to state 115
+
+
+State 95
+
+   45 expr_without_constants: expr T_LogicalAnd . expr
+   61 expr: expr T_LogicalAnd . expr
+
+    T_identifier        shift, and go to state 59
+    T_numericConstants  shift, and go to state 17
+    T_stringLiteral     shift, and go to state 18
+
+    expr  go to state 116
+
+
+State 96
+
+   46 expr_without_constants: expr T_LogicalOr . expr
+   62 expr: expr T_LogicalOr . expr
+
+    T_identifier        shift, and go to state 59
+    T_numericConstants  shift, and go to state 17
+    T_stringLiteral     shift, and go to state 18
+
+    expr  go to state 117
+
+
+State 97
+
+   47 expr_without_constants: expr T_less . expr
+   63 expr: expr T_less . expr
+
+    T_identifier        shift, and go to state 59
+    T_numericConstants  shift, and go to state 17
+    T_stringLiteral     shift, and go to state 18
+
+    expr  go to state 118
+
+
+State 98
+
+   48 expr_without_constants: expr T_less_equal . expr
+   64 expr: expr T_less_equal . expr
+
+    T_identifier        shift, and go to state 59
+    T_numericConstants  shift, and go to state 17
+    T_stringLiteral     shift, and go to state 18
+
+    expr  go to state 119
+
+
+State 99
+
+   49 expr_without_constants: expr T_greater . expr
+   65 expr: expr T_greater . expr
+
+    T_identifier        shift, and go to state 59
+    T_numericConstants  shift, and go to state 17
+    T_stringLiteral     shift, and go to state 18
+
+    expr  go to state 120
+
+
+State 100
+
+   50 expr_without_constants: expr T_greater_equal . expr
+   66 expr: expr T_greater_equal . expr
+
+    T_identifier        shift, and go to state 59
+    T_numericConstants  shift, and go to state 17
+    T_stringLiteral     shift, and go to state 18
+
+    expr  go to state 121
+
+
+State 101
+
+   51 expr_without_constants: expr T_equal_equal . expr
+   67 expr: expr T_equal_equal . expr
+
+    T_identifier        shift, and go to state 59
+    T_numericConstants  shift, and go to state 17
+    T_stringLiteral     shift, and go to state 18
+
+    expr  go to state 122
+
+
+State 102
+
+   52 expr_without_constants: expr T_not_equal . expr
+   68 expr: expr T_not_equal . expr
+
+    T_identifier        shift, and go to state 59
+    T_numericConstants  shift, and go to state 17
+    T_stringLiteral     shift, and go to state 18
+
+    expr  go to state 123
+
+
+State 103
+
+   38 expr_or_empty_with_assignment_and_closed_parent: Assignment_stmt . T_closedParanthesis
+
+    T_closedParanthesis  shift, and go to state 124
+
+
+State 104
+
+   15 for_stmt: T_for T_openParenthesis expr_or_empty_with_semicolon_and_assignment expr_or_empty_with_semicolon_and_assignment expr_or_empty_with_assignment_and_closed_parent . block
+
+    error                shift, and go to state 9
+    T_int                shift, and go to state 10
+    T_type               shift, and go to state 11
+    T_for                shift, and go to state 12
+    T_if                 shift, and go to state 13
+    T_while              shift, and go to state 14
+    T_openFlowerBracket  shift, and go to state 7
+    T_Semicolon          shift, and go to state 106
+    T_identifier         shift, and go to state 16
+    T_numericConstants   shift, and go to state 17
+    T_stringLiteral      shift, and go to state 18
+
+    block            go to state 125
+    stmt             go to state 108
+    for_stmt         go to state 21
+    while_stmt       go to state 22
+    if_stmt          go to state 23
+    Assignment_stmt  go to state 24
+    expr             go to state 25
+    openflower       go to state 109
+
+
+State 105
+
+   37 expr_or_empty_with_assignment_and_closed_parent: expr_or_empty . T_closedParanthesis
+
+    T_closedParanthesis  shift, and go to state 126
+
+
+State 106
+
+    6 block: T_Semicolon .
+
+    $default  reduce using rule 6 (block)
+
+
+State 107
+
+   17 if_stmt: T_if T_openParenthesis expr T_closedParanthesis block . elseif_else_empty
+
+    T_else  shift, and go to state 127
+
+    T_else    [reduce using rule 21 (elseif_else_empty)]
+    $default  reduce using rule 21 (elseif_else_empty)
+
+    elseif_else_empty  go to state 128
+
+
+State 108
+
+    5 block: stmt .
+
+    $default  reduce using rule 5 (block)
+
+
+State 109
+
+    4 block: openflower . block_end_flower
+
+    error                  shift, and go to state 9
+    T_int                  shift, and go to state 10
+    T_type                 shift, and go to state 11
+    T_for                  shift, and go to state 12
+    T_if                   shift, and go to state 13
+    T_while                shift, and go to state 14
+    T_closedFlowerBracket  shift, and go to state 15
+    T_identifier           shift, and go to state 16
+    T_numericConstants     shift, and go to state 17
+    T_stringLiteral        shift, and go to state 18
+
+    block_end_flower  go to state 129
+    stmt              go to state 20
+    for_stmt          go to state 21
+    while_stmt        go to state 22
+    if_stmt           go to state 23
+    Assignment_stmt   go to state 24
+    expr              go to state 25
+    closeflower       go to state 26
+
+
+State 110
+
+   16 while_stmt: T_while T_openParenthesis expr T_closedParanthesis block .
+
+    $default  reduce using rule 16 (while_stmt)
+
+
+State 111
+
+   40 expr_without_constants: expr T_plus expr .
+   56 expr: expr . T_plus expr
+   56     | expr T_plus expr .
+   57     | expr . T_minus expr
+   58     | expr . T_divide expr
+   59     | expr . T_multiply expr
+   60     | expr . T_mod expr
+   61     | expr . T_LogicalAnd expr
+   62     | expr . T_LogicalOr expr
+   63     | expr . T_less expr
+   64     | expr . T_less_equal expr
+   65     | expr . T_greater expr
+   66     | expr . T_greater_equal expr
+   67     | expr . T_equal_equal expr
+   68     | expr . T_not_equal expr
+
+    T_mod       shift, and go to state 42
+    T_divide    shift, and go to state 43
+    T_multiply  shift, and go to state 44
+
+    T_closedParanthesis  reduce using rule 40 (expr_without_constants)
+    T_Semicolon          reduce using rule 40 (expr_without_constants)
+    $default             reduce using rule 56 (expr)
+
+
+State 112
+
+   41 expr_without_constants: expr T_minus expr .
+   56 expr: expr . T_plus expr
+   57     | expr . T_minus expr
+   57     | expr T_minus expr .
+   58     | expr . T_divide expr
+   59     | expr . T_multiply expr
+   60     | expr . T_mod expr
+   61     | expr . T_LogicalAnd expr
+   62     | expr . T_LogicalOr expr
+   63     | expr . T_less expr
+   64     | expr . T_less_equal expr
+   65     | expr . T_greater expr
+   66     | expr . T_greater_equal expr
+   67     | expr . T_equal_equal expr
+   68     | expr . T_not_equal expr
+
+    T_mod       shift, and go to state 42
+    T_divide    shift, and go to state 43
+    T_multiply  shift, and go to state 44
+
+    T_closedParanthesis  reduce using rule 41 (expr_without_constants)
+    T_Semicolon          reduce using rule 41 (expr_without_constants)
+    $default             reduce using rule 57 (expr)
+
+
+State 113
+
+   44 expr_without_constants: expr T_mod expr .
+   56 expr: expr . T_plus expr
+   57     | expr . T_minus expr
+   58     | expr . T_divide expr
+   59     | expr . T_multiply expr
+   60     | expr . T_mod expr
+   60     | expr T_mod expr .
+   61     | expr . T_LogicalAnd expr
+   62     | expr . T_LogicalOr expr
+   63     | expr . T_less expr
+   64     | expr . T_less_equal expr
+   65     | expr . T_greater expr
+   66     | expr . T_greater_equal expr
+   67     | expr . T_equal_equal expr
+   68     | expr . T_not_equal expr
+
+    T_closedParanthesis  reduce using rule 44 (expr_without_constants)
+    T_Semicolon          reduce using rule 44 (expr_without_constants)
+    $default             reduce using rule 60 (expr)
+
+
+State 114
+
+   42 expr_without_constants: expr T_divide expr .
+   56 expr: expr . T_plus expr
+   57     | expr . T_minus expr
+   58     | expr . T_divide expr
+   58     | expr T_divide expr .
+   59     | expr . T_multiply expr
+   60     | expr . T_mod expr
+   61     | expr . T_LogicalAnd expr
+   62     | expr . T_LogicalOr expr
+   63     | expr . T_less expr
+   64     | expr . T_less_equal expr
+   65     | expr . T_greater expr
+   66     | expr . T_greater_equal expr
+   67     | expr . T_equal_equal expr
+   68     | expr . T_not_equal expr
+
+    T_closedParanthesis  reduce using rule 42 (expr_without_constants)
+    T_Semicolon          reduce using rule 42 (expr_without_constants)
+    $default             reduce using rule 58 (expr)
+
+
+State 115
+
+   43 expr_without_constants: expr T_multiply expr .
+   56 expr: expr . T_plus expr
+   57     | expr . T_minus expr
+   58     | expr . T_divide expr
+   59     | expr . T_multiply expr
+   59     | expr T_multiply expr .
+   60     | expr . T_mod expr
+   61     | expr . T_LogicalAnd expr
+   62     | expr . T_LogicalOr expr
+   63     | expr . T_less expr
+   64     | expr . T_less_equal expr
+   65     | expr . T_greater expr
+   66     | expr . T_greater_equal expr
+   67     | expr . T_equal_equal expr
+   68     | expr . T_not_equal expr
+
+    T_closedParanthesis  reduce using rule 43 (expr_without_constants)
+    T_Semicolon          reduce using rule 43 (expr_without_constants)
+    $default             reduce using rule 59 (expr)
+
+
+State 116
+
+   45 expr_without_constants: expr T_LogicalAnd expr .
+   56 expr: expr . T_plus expr
+   57     | expr . T_minus expr
+   58     | expr . T_divide expr
+   59     | expr . T_multiply expr
+   60     | expr . T_mod expr
+   61     | expr . T_LogicalAnd expr
+   61     | expr T_LogicalAnd expr .
+   62     | expr . T_LogicalOr expr
+   63     | expr . T_less expr
+   64     | expr . T_less_equal expr
+   65     | expr . T_greater expr
+   66     | expr . T_greater_equal expr
+   67     | expr . T_equal_equal expr
+   68     | expr . T_not_equal expr
+
+    T_plus           shift, and go to state 40
+    T_minus          shift, and go to state 41
+    T_mod            shift, and go to state 42
+    T_divide         shift, and go to state 43
+    T_multiply       shift, and go to state 44
+    T_less           shift, and go to state 47
+    T_less_equal     shift, and go to state 48
+    T_greater        shift, and go to state 49
+    T_greater_equal  shift, and go to state 50
+    T_equal_equal    shift, and go to state 51
+    T_not_equal      shift, and go to state 52
+
+    T_LogicalAnd  reduce using rule 61 (expr)
+    T_LogicalOr   reduce using rule 61 (expr)
+    $default      reduce using rule 45 (expr_without_constants)
+
+
+State 117
+
+   46 expr_without_constants: expr T_LogicalOr expr .
+   56 expr: expr . T_plus expr
+   57     | expr . T_minus expr
+   58     | expr . T_divide expr
+   59     | expr . T_multiply expr
+   60     | expr . T_mod expr
+   61     | expr . T_LogicalAnd expr
+   62     | expr . T_LogicalOr expr
+   62     | expr T_LogicalOr expr .
+   63     | expr . T_less expr
+   64     | expr . T_less_equal expr
+   65     | expr . T_greater expr
+   66     | expr . T_greater_equal expr
+   67     | expr . T_equal_equal expr
+   68     | expr . T_not_equal expr
+
+    T_plus           shift, and go to state 40
+    T_minus          shift, and go to state 41
+    T_mod            shift, and go to state 42
+    T_divide         shift, and go to state 43
+    T_multiply       shift, and go to state 44
+    T_less           shift, and go to state 47
+    T_less_equal     shift, and go to state 48
+    T_greater        shift, and go to state 49
+    T_greater_equal  shift, and go to state 50
+    T_equal_equal    shift, and go to state 51
+    T_not_equal      shift, and go to state 52
+
+    T_LogicalAnd  reduce using rule 62 (expr)
+    T_LogicalOr   reduce using rule 62 (expr)
+    $default      reduce using rule 46 (expr_without_constants)
+
+
+State 118
+
+   47 expr_without_constants: expr T_less expr .
+   56 expr: expr . T_plus expr
+   57     | expr . T_minus expr
+   58     | expr . T_divide expr
+   59     | expr . T_multiply expr
+   60     | expr . T_mod expr
+   61     | expr . T_LogicalAnd expr
+   62     | expr . T_LogicalOr expr
+   63     | expr . T_less expr
+   63     | expr T_less expr .
+   64     | expr . T_less_equal expr
+   65     | expr . T_greater expr
+   66     | expr . T_greater_equal expr
+   67     | expr . T_equal_equal expr
+   68     | expr . T_not_equal expr
+
+    T_plus      shift, and go to state 40
+    T_minus     shift, and go to state 41
+    T_mod       shift, and go to state 42
+    T_divide    shift, and go to state 43
+    T_multiply  shift, and go to state 44
+
+    T_closedParanthesis  reduce using rule 47 (expr_without_constants)
+    T_Semicolon          reduce using rule 47 (expr_without_constants)
+    $default             reduce using rule 63 (expr)
+
+
+State 119
+
+   48 expr_without_constants: expr T_less_equal expr .
+   56 expr: expr . T_plus expr
+   57     | expr . T_minus expr
+   58     | expr . T_divide expr
+   59     | expr . T_multiply expr
+   60     | expr . T_mod expr
+   61     | expr . T_LogicalAnd expr
+   62     | expr . T_LogicalOr expr
+   63     | expr . T_less expr
+   64     | expr . T_less_equal expr
+   64     | expr T_less_equal expr .
+   65     | expr . T_greater expr
+   66     | expr . T_greater_equal expr
+   67     | expr . T_equal_equal expr
+   68     | expr . T_not_equal expr
+
+    T_plus      shift, and go to state 40
+    T_minus     shift, and go to state 41
+    T_mod       shift, and go to state 42
+    T_divide    shift, and go to state 43
+    T_multiply  shift, and go to state 44
+
+    T_closedParanthesis  reduce using rule 48 (expr_without_constants)
+    T_Semicolon          reduce using rule 48 (expr_without_constants)
+    $default             reduce using rule 64 (expr)
+
+
+State 120
+
+   49 expr_without_constants: expr T_greater expr .
+   56 expr: expr . T_plus expr
+   57     | expr . T_minus expr
+   58     | expr . T_divide expr
+   59     | expr . T_multiply expr
+   60     | expr . T_mod expr
+   61     | expr . T_LogicalAnd expr
+   62     | expr . T_LogicalOr expr
+   63     | expr . T_less expr
+   64     | expr . T_less_equal expr
+   65     | expr . T_greater expr
+   65     | expr T_greater expr .
+   66     | expr . T_greater_equal expr
+   67     | expr . T_equal_equal expr
+   68     | expr . T_not_equal expr
+
+    T_plus      shift, and go to state 40
+    T_minus     shift, and go to state 41
+    T_mod       shift, and go to state 42
+    T_divide    shift, and go to state 43
+    T_multiply  shift, and go to state 44
+
+    T_closedParanthesis  reduce using rule 49 (expr_without_constants)
+    T_Semicolon          reduce using rule 49 (expr_without_constants)
+    $default             reduce using rule 65 (expr)
+
+
+State 121
+
+   50 expr_without_constants: expr T_greater_equal expr .
+   56 expr: expr . T_plus expr
+   57     | expr . T_minus expr
+   58     | expr . T_divide expr
+   59     | expr . T_multiply expr
+   60     | expr . T_mod expr
+   61     | expr . T_LogicalAnd expr
+   62     | expr . T_LogicalOr expr
+   63     | expr . T_less expr
+   64     | expr . T_less_equal expr
+   65     | expr . T_greater expr
+   66     | expr . T_greater_equal expr
+   66     | expr T_greater_equal expr .
+   67     | expr . T_equal_equal expr
+   68     | expr . T_not_equal expr
+
+    T_plus      shift, and go to state 40
+    T_minus     shift, and go to state 41
+    T_mod       shift, and go to state 42
+    T_divide    shift, and go to state 43
+    T_multiply  shift, and go to state 44
+
+    T_closedParanthesis  reduce using rule 50 (expr_without_constants)
+    T_Semicolon          reduce using rule 50 (expr_without_constants)
+    $default             reduce using rule 66 (expr)
+
+
+State 122
+
+   51 expr_without_constants: expr T_equal_equal expr .
+   56 expr: expr . T_plus expr
+   57     | expr . T_minus expr
+   58     | expr . T_divide expr
+   59     | expr . T_multiply expr
+   60     | expr . T_mod expr
+   61     | expr . T_LogicalAnd expr
+   62     | expr . T_LogicalOr expr
+   63     | expr . T_less expr
+   64     | expr . T_less_equal expr
+   65     | expr . T_greater expr
+   66     | expr . T_greater_equal expr
+   67     | expr . T_equal_equal expr
+   67     | expr T_equal_equal expr .
+   68     | expr . T_not_equal expr
+
+    T_plus      shift, and go to state 40
+    T_minus     shift, and go to state 41
+    T_mod       shift, and go to state 42
+    T_divide    shift, and go to state 43
+    T_multiply  shift, and go to state 44
+
+    T_closedParanthesis  reduce using rule 51 (expr_without_constants)
+    T_Semicolon          reduce using rule 51 (expr_without_constants)
+    $default             reduce using rule 67 (expr)
+
+
+State 123
+
+   52 expr_without_constants: expr T_not_equal expr .
+   56 expr: expr . T_plus expr
+   57     | expr . T_minus expr
+   58     | expr . T_divide expr
+   59     | expr . T_multiply expr
+   60     | expr . T_mod expr
+   61     | expr . T_LogicalAnd expr
+   62     | expr . T_LogicalOr expr
+   63     | expr . T_less expr
+   64     | expr . T_less_equal expr
+   65     | expr . T_greater expr
+   66     | expr . T_greater_equal expr
+   67     | expr . T_equal_equal expr
+   68     | expr . T_not_equal expr
+   68     | expr T_not_equal expr .
+
+    T_plus      shift, and go to state 40
+    T_minus     shift, and go to state 41
+    T_mod       shift, and go to state 42
+    T_divide    shift, and go to state 43
+    T_multiply  shift, and go to state 44
+
+    T_closedParanthesis  reduce using rule 52 (expr_without_constants)
+    T_Semicolon          reduce using rule 52 (expr_without_constants)
+    $default             reduce using rule 68 (expr)
+
+
+State 124
+
+   38 expr_or_empty_with_assignment_and_closed_parent: Assignment_stmt T_closedParanthesis .
+
+    $default  reduce using rule 38 (expr_or_empty_with_assignment_and_closed_parent)
+
+
+State 125
+
+   15 for_stmt: T_for T_openParenthesis expr_or_empty_with_semicolon_and_assignment expr_or_empty_with_semicolon_and_assignment expr_or_empty_with_assignment_and_closed_parent block .
+
+    $default  reduce using rule 15 (for_stmt)
+
+
+State 126
+
+   37 expr_or_empty_with_assignment_and_closed_parent: expr_or_empty T_closedParanthesis .
+
+    $default  reduce using rule 37 (expr_or_empty_with_assignment_and_closed_parent)
+
+
+State 127
+
+   18 elseif_else_empty: T_else . T_if T_openParenthesis expr T_closedParanthesis block elseif_else_empty
+   19                  | T_else . Multiple_stmts_not_if
+   20                  | T_else . openflower block_end_flower
+
+    T_int                shift, and go to state 10
+    T_type               shift, and go to state 11
+    T_for                shift, and go to state 12
+    T_if                 shift, and go to state 130
+    T_while              shift, and go to state 14
+    T_openFlowerBracket  shift, and go to state 7
+    T_Semicolon          shift, and go to state 131
+    T_identifier         shift, and go to state 16
+    T_numericConstants   shift, and go to state 17
+    T_stringLiteral      shift, and go to state 18
+
+    for_stmt               go to state 132
+    while_stmt             go to state 133
+    Multiple_stmts_not_if  go to state 134
+    stmt_without_if        go to state 135
+    Assignment_stmt        go to state 136
+    expr                   go to state 137
+    openflower             go to state 138
+
+
+State 128
+
+   17 if_stmt: T_if T_openParenthesis expr T_closedParanthesis block elseif_else_empty .
+
+    $default  reduce using rule 17 (if_stmt)
+
+
+State 129
+
+    4 block: openflower block_end_flower .
+
+    $default  reduce using rule 4 (block)
+
+
+State 130
+
+   18 elseif_else_empty: T_else T_if . T_openParenthesis expr T_closedParanthesis block elseif_else_empty
+
+    T_openParenthesis  shift, and go to state 139
+
+
+State 131
+
+   23 Multiple_stmts_not_if: T_Semicolon .
+
+    $default  reduce using rule 23 (Multiple_stmts_not_if)
+
+
+State 132
+
+   27 stmt_without_if: for_stmt .
+
+    $default  reduce using rule 27 (stmt_without_if)
+
+
+State 133
+
+   26 stmt_without_if: while_stmt .
+
+    $default  reduce using rule 26 (stmt_without_if)
+
+
+State 134
+
+   19 elseif_else_empty: T_else Multiple_stmts_not_if .
+
+    $default  reduce using rule 19 (elseif_else_empty)
+
+
+State 135
+
+   22 Multiple_stmts_not_if: stmt_without_if . Multiple_stmts
+
+    error                  shift, and go to state 9
+    T_int                  shift, and go to state 10
+    T_type                 shift, and go to state 11
+    T_for                  shift, and go to state 12
+    T_if                   shift, and go to state 13
+    T_while                shift, and go to state 14
+    T_closedFlowerBracket  shift, and go to state 15
+    T_identifier           shift, and go to state 16
+    T_numericConstants     shift, and go to state 17
+    T_stringLiteral        shift, and go to state 18
+
+    Multiple_stmts   go to state 140
+    stmt             go to state 36
+    for_stmt         go to state 21
+    while_stmt       go to state 22
+    if_stmt          go to state 23
+    Assignment_stmt  go to state 24
+    expr             go to state 25
+    closeflower      go to state 37
+
+
+State 136
+
+   25 stmt_without_if: Assignment_stmt . T_Semicolon
+
+    T_Semicolon  shift, and go to state 141
+
+
+State 137
+
+   24 stmt_without_if: expr . T_Semicolon
+   56 expr: expr . T_plus expr
+   57     | expr . T_minus expr
+   58     | expr . T_divide expr
+   59     | expr . T_multiply expr
+   60     | expr . T_mod expr
+   61     | expr . T_LogicalAnd expr
+   62     | expr . T_LogicalOr expr
+   63     | expr . T_less expr
+   64     | expr . T_less_equal expr
+   65     | expr . T_greater expr
+   66     | expr . T_greater_equal expr
+   67     | expr . T_equal_equal expr
+   68     | expr . T_not_equal expr
+
+    T_Semicolon      shift, and go to state 142
+    T_plus           shift, and go to state 40
+    T_minus          shift, and go to state 41
+    T_mod            shift, and go to state 42
+    T_divide         shift, and go to state 43
+    T_multiply       shift, and go to state 44
+    T_LogicalAnd     shift, and go to state 45
+    T_LogicalOr      shift, and go to state 46
+    T_less           shift, and go to state 47
+    T_less_equal     shift, and go to state 48
+    T_greater        shift, and go to state 49
+    T_greater_equal  shift, and go to state 50
+    T_equal_equal    shift, and go to state 51
+    T_not_equal      shift, and go to state 52
+
+
+State 138
+
+   20 elseif_else_empty: T_else openflower . block_end_flower
+
+    error                  shift, and go to state 9
+    T_int                  shift, and go to state 10
+    T_type                 shift, and go to state 11
+    T_for                  shift, and go to state 12
+    T_if                   shift, and go to state 13
+    T_while                shift, and go to state 14
+    T_closedFlowerBracket  shift, and go to state 15
+    T_identifier           shift, and go to state 16
+    T_numericConstants     shift, and go to state 17
+    T_stringLiteral        shift, and go to state 18
+
+    block_end_flower  go to state 143
+    stmt              go to state 20
+    for_stmt          go to state 21
+    while_stmt        go to state 22
+    if_stmt           go to state 23
+    Assignment_stmt   go to state 24
+    expr              go to state 25
+    closeflower       go to state 26
+
+
+State 139
+
+   18 elseif_else_empty: T_else T_if T_openParenthesis . expr T_closedParanthesis block elseif_else_empty
+
+    T_identifier        shift, and go to state 59
+    T_numericConstants  shift, and go to state 17
+    T_stringLiteral     shift, and go to state 18
+
+    expr  go to state 144
+
+
+State 140
+
+   22 Multiple_stmts_not_if: stmt_without_if Multiple_stmts .
+
+    $default  reduce using rule 22 (Multiple_stmts_not_if)
+
+
+State 141
+
+   25 stmt_without_if: Assignment_stmt T_Semicolon .
+
+    $default  reduce using rule 25 (stmt_without_if)
+
+
+State 142
+
+   24 stmt_without_if: expr T_Semicolon .
+
+    $default  reduce using rule 24 (stmt_without_if)
+
+
+State 143
+
+   20 elseif_else_empty: T_else openflower block_end_flower .
+
+    $default  reduce using rule 20 (elseif_else_empty)
+
+
+State 144
+
+   18 elseif_else_empty: T_else T_if T_openParenthesis expr . T_closedParanthesis block elseif_else_empty
+   56 expr: expr . T_plus expr
+   57     | expr . T_minus expr
+   58     | expr . T_divide expr
+   59     | expr . T_multiply expr
+   60     | expr . T_mod expr
+   61     | expr . T_LogicalAnd expr
+   62     | expr . T_LogicalOr expr
+   63     | expr . T_less expr
+   64     | expr . T_less_equal expr
+   65     | expr . T_greater expr
+   66     | expr . T_greater_equal expr
+   67     | expr . T_equal_equal expr
+   68     | expr . T_not_equal expr
+
+    T_closedParanthesis  shift, and go to state 145
+    T_plus               shift, and go to state 40
+    T_minus              shift, and go to state 41
+    T_mod                shift, and go to state 42
+    T_divide             shift, and go to state 43
+    T_multiply           shift, and go to state 44
+    T_LogicalAnd         shift, and go to state 45
+    T_LogicalOr          shift, and go to state 46
+    T_less               shift, and go to state 47
+    T_less_equal         shift, and go to state 48
+    T_greater            shift, and go to state 49
+    T_greater_equal      shift, and go to state 50
+    T_equal_equal        shift, and go to state 51
+    T_not_equal          shift, and go to state 52
+
+
+State 145
+
+   18 elseif_else_empty: T_else T_if T_openParenthesis expr T_closedParanthesis . block elseif_else_empty
+
+    error                shift, and go to state 9
+    T_int                shift, and go to state 10
+    T_type               shift, and go to state 11
+    T_for                shift, and go to state 12
+    T_if                 shift, and go to state 13
+    T_while              shift, and go to state 14
+    T_openFlowerBracket  shift, and go to state 7
+    T_Semicolon          shift, and go to state 106
+    T_identifier         shift, and go to state 16
+    T_numericConstants   shift, and go to state 17
+    T_stringLiteral      shift, and go to state 18
+
+    block            go to state 146
+    stmt             go to state 108
+    for_stmt         go to state 21
+    while_stmt       go to state 22
+    if_stmt          go to state 23
+    Assignment_stmt  go to state 24
+    expr             go to state 25
+    openflower       go to state 109
+
+
+State 146
+
+   18 elseif_else_empty: T_else T_if T_openParenthesis expr T_closedParanthesis block . elseif_else_empty
+
+    T_else  shift, and go to state 127
+
+    T_else    [reduce using rule 21 (elseif_else_empty)]
+    $default  reduce using rule 21 (elseif_else_empty)
+
+    elseif_else_empty  go to state 147
+
+
+State 147
+
+   18 elseif_else_empty: T_else T_if T_openParenthesis expr T_closedParanthesis block elseif_else_empty .
+
+    $default  reduce using rule 18 (elseif_else_empty)

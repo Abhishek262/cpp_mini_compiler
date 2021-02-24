@@ -141,7 +141,7 @@ void Gen_Symbol_Table(char *text,int nm,int scp)
 
 void display()
 {
-	printf("\n************************************************************************\n");
+	printf("\n\nSymbol Table\n");
 	for(int i=0;i<=count;i++)
 	{
 		int h=Symbol_Table[i].up;
@@ -150,7 +150,7 @@ void display()
 			printf("Symbol:%s \t Scope:%d \t Line number: %s\n",Symbol_Table[i].arr[j].var_name,Symbol_Table[i].arr[j].scope,Symbol_Table[i].arr[j].Line_t);
 		}
 	}	
-	printf("\n************************************************************************\n");
+	printf("\n\n");
 
 }
 
