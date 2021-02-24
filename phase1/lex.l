@@ -35,16 +35,16 @@ alignas|alignof|and|and_eq|asm|atomic_cancel|atomic_commit|atomic_noexcept|bitan
 
 "for"							{printf("T_for ");}
 "while"							{printf("T_while ");}
-switch    						{ printf("T_SWITCH");}
-case 							{ printf("T_CASE");}
-break 							{ printf("T_BREAK");}
-default 						{ printf("T_DEFAULT");}
-struct 							{ printf("T_STRUCT");}
-class 							{ printf("T_CLASS");}
+switch    						{ printf("T_switch ");}
+case 							{ printf("T_case ");}
+break 							{ printf("T_break ");}
+default 						{ printf("T_default ");}
+struct 							{ printf("T_struct ");}
+class 							{ printf("T_class ");}
 
 "<<"							{printf("T_InputStream  ");}
 ">>"							{printf("T_OutputStream  ");}
-
+"using namespace "{letter}+		{printf("T_namespace	");};
 
 "("							  	{printf("T_openParenthesis  ");}		  
 ")"								{printf("T_closedParanthesis  ");}
@@ -56,6 +56,7 @@ class 							{ printf("T_CLASS");}
 "<"								{printf("T_less ");}
 "<="							{printf("T_less_equal ");}
 "=="							{printf("T_equal_equal ");}
+"!"								{printf("T_not_equal_alone ");}
 "!="							{printf("T_not_equal ");}
 
 "&&"							{printf("T_LogicalAnd ");}
@@ -71,8 +72,10 @@ class 							{ printf("T_CLASS");}
 "*"								{printf("T_multiply ");}
 "%"								{printf("T_mod ");}
 "="								{printf("T_AssignmentOperator  ");}
-^"#include ".+ ;
+^"#include ".+ ;				{printf("T_include	");}
 ";"								{printf("T_Semicolon  ");}
+","								{printf("T_comma  ");}
+"."								{printf("T_dot  ");}
 
 {letter}({letter}|{digit})* 	{Gen_Symbol_Table(yytext,yylineno,st[top]);printf("T_identifier ");  }
 

@@ -1,12 +1,13 @@
 #include <iostream>
-
+using namespace std;
 int main()
 {
 
   int externfs = 10;
   // scanf("%d",&a);
   int a[10];
-  if (1)
+  int a,b;
+  if (!sf1)
   {
     cout << "hel oe" << endl;
   }

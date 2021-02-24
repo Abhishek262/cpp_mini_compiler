@@ -6,7 +6,7 @@ int main()
   int externfs = 10;
   // scanf("%d",&a);
   int a[10];
-  if (1)
+  if (reet)
   {
     cout << "hel oe" << endl;
   }
