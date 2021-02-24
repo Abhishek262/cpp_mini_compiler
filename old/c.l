@@ -27,8 +27,7 @@ float 		{ fvar = 0;return T_FLOAT;}
 char 		{ fvar = 0;return T_CHAR;}
 void 		{ fvar = 0;return T_VOID;}
 double 		{ fvar = 0;return T_DOUBLE;}
-fn1|fn2		{ fvar = 0;return T_FNAME;}
-fn		{ fvar = 0;return T_NFNAM;}
+do|typedef|register|extern|unsigned|auto|continue|enum|goto|short	{ fvar = 0;return T_RESERVEDKEYWORDS;}
 for 		{ fvar = 0;return T_FOR;}
 while		{ fvar = 0;return T_WHILE;}
 if		{ fvar = 0;return T_IF;}
@@ -61,9 +60,11 @@ class 		{ fvar = 0;return T_CLASS;}
 ">"		{ fvar = 0;return T_GT;}
 "<"		{ fvar = 0;return T_LT;}
 "."     	{ fvar = 0;return T_DOT;}
+"&&"     	{ fvar = 0;return T_LOGICALAND;}
+"||"     	{ fvar = 0;return T_LOGICALOR;}
 \/\/.* ;	
 \/\*(.*\n)*.*\*\/ ;
-.       return yytext[0];
+.       {printf("%s\n",yytext);return yytext[0];}
 %%
 
 // Variable structure that consists of - :

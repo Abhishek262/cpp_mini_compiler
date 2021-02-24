@@ -22,10 +22,10 @@ int className[26] ={0};
 %token T_OPENFLOWERBRACKET T_CLOSEFLOWERBRACKET
 %token T_ACCESS T_CUSTOM T_FNAME T_NFNAM
 %token T_SWITCH T_BREAK T_DEFAULT T_CASE
-
+%token T_RESERVEDKEYWORDS
 %right '='
-%left T_AND T_OR
-%left '<' '>' T_LE T_GE T_EQ T_NE T_LT T_GT
+%left T_LOGICALAND T_LOGICALOR
+%left '<' '>' T_LE T_GE T_EQ T_NE T_LT T_GT 
 
 %%
 
@@ -196,6 +196,8 @@ Expr:
 	| Expr T_EQ Expr
 	| Expr T_GT Expr
 	| Expr T_LT Expr
+	| Expr T_LOGICALAND Expr
+	| Expr T_LOGICALOR Expr
 	| Assignment
 	| ArrayUsage
 	;
@@ -223,6 +225,7 @@ int main(int argc, char *argv[])
 	
    if(!yyparse())
 		printf("\nParsing complete\n");
+		
 	else
 		printf("\nParsing failed\n");
 	

@@ -3,14 +3,14 @@
 int main()
 {
 
-  int a = 10;
+  int externfs = 10;
   // scanf("%d",&a);
-
+  int a[10];
   if (1)
   {
     cout << "hel oe" << endl;
   }
-  else if (a > 7)
+  else if (a != 7 && b==5 || x =='5')
   {
     cout << "heloe" ;
   }
