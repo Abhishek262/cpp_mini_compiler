@@ -10,21 +10,22 @@ int yyerror();
 int className[26] ={0};
 %}
 
-%token INT FLOAT CHAR DOUBLE VOID
-%token FOR WHILE 
-%token IF ELSE PRINTF ELSEIF
-%token STRUCT CLASS
-%token NUM ID
-%token INCLUDE
-%token DOT
-%token COUTSTR COUT ENDL COUTOP
-%token CIN CINOP
-%token ACCESS CUSTOM FNAME NFNAM
-%token SWITCH BREAK DEFAULT CASE
+%token T_INT T_FLOAT T_CHAR T_DOUBLE T_VOID
+%token T_FOR T_WHILE 
+%token T_IF T_ELSE T_PRINTF T_ELSEIF
+%token T_STRUCT T_CLASS
+%token T_NUM T_ID
+%token T_INCLUDE
+%token T_DOT
+%token T_COUTSTR T_COUT T_ENDL T_COUTOP
+%token T_CIN T_CINOP
+%token T_OPENFLOWERBRACKET T_CLOSEFLOWERBRACKET
+%token T_ACCESS T_CUSTOM T_FNAME T_NFNAM
+%token T_SWITCH T_BREAK T_DEFAULT T_CASE
 
 %right '='
-%left AND OR
-%left '<' '>' LE GE EQ NE LT GT
+%left T_AND T_OR
+%left '<' '>' T_LE T_GE T_EQ T_NE T_LT T_GT
 
 %%
 
@@ -45,47 +46,47 @@ Declaration: Type Assignment ';'
 	| error	
 	;
 
-Arg:	Type ID 	
+Arg:	Type T_ID 	
 	;
 
 /* Assignment block */
-Assignment: ID '=' Assignment
-	| ID '=' FunctionCall
-	| ID '=' ArrayUsage
+Assignment: T_ID '=' Assignment
+	| T_ID '=' FunctionCall
+	| T_ID '=' ArrayUsage
 	| ArrayUsage '=' Assignment
-	| ID ',' Assignment
-	| NUM ',' Assignment
-	| ID '+' Assignment
-	| ID '-' Assignment
-	| ID '*' Assignment
-	| ID '/' Assignment	
-	| NUM '+' Assignment
-	| NUM '-' Assignment
-	| NUM '*' Assignment
-	| NUM '/' Assignment
+	| T_ID ',' Assignment
+	| T_NUM ',' Assignment
+	| T_ID '+' Assignment
+	| T_ID '-' Assignment
+	| T_ID '*' Assignment
+	| T_ID '/' Assignment	
+	| T_NUM '+' Assignment
+	| T_NUM '-' Assignment
+	| T_NUM '*' Assignment
+	| T_NUM '/' Assignment
 	| '\'' Assignment '\''	
 	| '(' Assignment ')'
 	| '-' '(' Assignment ')'
-	| '-' NUM
-	| '-' ID
-	|   NUM 
-	|   ID
+	| '-' T_NUM
+	| '-' T_ID
+	|   T_NUM 
+	|   T_ID
 	;
 
 /* Function Call Block */
-FunctionCall : ID'('')'
-	| ID'('Assignment')'
-	| CUSTOM DOT FNAME '('')'
-	| CUSTOM DOT NFNAM '('')' {printf("unknown function\n");return 0;}
+FunctionCall : T_ID'('')'
+	| T_ID'('Assignment')'
+	| T_CUSTOM T_DOT T_FNAME '('')'
+	| T_CUSTOM T_DOT T_NFNAM '('')' {printf("unknown function\n");return 0;}
 	;
 
 /* Array Usage */
-ArrayUsage : ID'['Assignment']'
+ArrayUsage : T_ID'['Assignment']'
 	;
 
 /* Function block */
-Function: Type ID '(' ArgListOpt ')' CompoundStmt 
-	| Type FNAME '('')' CompoundStmt 
+Function: Type T_ID '(' ArgListOpt ')' CompoundStmt 
+	| Type T_FNAME '('')' CompoundStmt 
 	;
 	
 ArgListOpt: ArgList
@@ -114,12 +115,12 @@ Stmt:	WhileStmt
 	;
 
 /* Type Identifier block */
-Type:	INT
-	| FLOAT
-	| CHAR
-	| DOUBLE
-	| VOID
-	| CUSTOM {
+Type:	T_INT
+	| T_FLOAT
+	| T_CHAR
+	| T_DOUBLE
+	| T_VOID
+	| T_CUSTOM {
 		// printf("here\n");
 			 if (className[$1] == 0) {
 				printf("Error: Unknown Class ID\nQuiting!");
@@ -129,34 +130,34 @@ Type:	INT
 	;
 
 /* Loop Blocks */ 
-WhileStmt: WHILE '(' Expr ')' Stmt  
-	| WHILE '(' Expr ')' CompoundStmt 
+WhileStmt: T_WHILE '(' Expr ')' Stmt  
+	| T_WHILE '(' Expr ')' CompoundStmt 
 	;
 
 /* For Block */
-ForStmt: FOR '(' Expr ';' Expr ';' Expr ')' Stmt 
-       | FOR '(' Expr ';' Expr ';' Expr ')' CompoundStmt 
-       | FOR '(' Expr ')' Stmt 
-       | FOR '(' Expr ')' CompoundStmt 
+ForStmt: T_FOR '(' Expr ';' Expr ';' Expr ')' Stmt 
+       | T_FOR '(' Expr ';' Expr ';' Expr ')' CompoundStmt 
+       | T_FOR '(' Expr ')' Stmt 
+       | T_FOR '(' Expr ')' CompoundStmt 
 	;
 
 /* IfStmt Block */
-IfStmt: IF '(' Expr ')' Stmt  
-	| IF '(' Expr ')' CompoundStmt 
+IfStmt: T_IF '(' Expr ')' Stmt  
+	| T_IF '(' Expr ')' CompoundStmt 
 	;
 
 /* ElseStmt Block */
-ElseStmt: ELSE Stmt  
-	| ELSE CompoundStmt 
+ElseStmt: T_ELSE Stmt  
+	| T_ELSE CompoundStmt 
 	;
 
 /* ElseIfStmt Block */
-ElseIfStmt: ELSEIF '(' Expr ')' Stmt  
-	| ELSEIF '(' Expr ')' CompoundStmt 
+ElseIfStmt: T_ELSEIF '(' Expr ')' Stmt  
+	| T_ELSEIF '(' Expr ')' CompoundStmt 
 	;
 
 /* SwitchStmt Block */
-SwitchStmt:  SWITCH '(' ID|Expr ')' '{' InnerSwitchStmt '}'
+SwitchStmt:  T_SWITCH '(' T_ID|Expr ')' '{' InnerSwitchStmt '}'
 	;
 
 /* SwitchStmt Block */
@@ -165,47 +166,47 @@ InnerSwitchStmt:  SwitchCaseStmt
 	;
 
 SwitchCaseStmt: SwitchCaseStmt SwitchCaseStmt	
-	| CASE NUM ':' Stmt
-	| BREAK ';'
+	| T_CASE T_NUM ':' Stmt
+	| T_BREAK ';'
 	;
 
-DefaultSwitchStmt: DEFAULT ':' Stmt  BREAK ';'
-	| DEFAULT ':' Stmt
+DefaultSwitchStmt: T_DEFAULT ':' Stmt  T_BREAK ';'
+	| T_DEFAULT ':' Stmt
     ;
 
 /* Struct Statement */
-StructStmt : STRUCT ID '{' Declaration '}'
+StructStmt : T_STRUCT T_ID '{' Declaration '}'
 	;
 
-ClassStmt : CLASS ID '{' ACCESS ':' start  ACCESS ':' start '}' 
+ClassStmt : T_CLASS T_ID '{' T_ACCESS ':' start  T_ACCESS ':' start '}' 
 			{ className[$2] = 1; printf("value of classvariable = %d\n", $2);}
-	   | CLASS ID ':' ACCESS ID '{' ACCESS ':' start  ACCESS ':' start '}'
+	   | T_CLASS T_ID ':' T_ACCESS T_ID '{' T_ACCESS ':' start  T_ACCESS ':' start '}'
 	   		{ className[$2] = 1; printf("value of classvariable = %d\n", $2); }
 	;
 
 /* Print Function */
-PrintFunc : PRINTF '(' Expr ')' ';'
+PrintFunc : T_PRINTF '(' Expr ')' ';'
 	;
 
 /*Expression Block*/
 Expr:	
-	| Expr LE Expr 
-	| Expr GE Expr
-	| Expr NE Expr
-	| Expr EQ Expr
-	| Expr GT Expr
-	| Expr LT Expr
+	| Expr T_LE Expr 
+	| Expr T_GE Expr
+	| Expr T_NE Expr
+	| Expr T_EQ Expr
+	| Expr T_GT Expr
+	| Expr T_LT Expr
 	| Assignment
 	| ArrayUsage
 	;
 	
 coutstatement:
-	COUT COUTOP COUTSTR COUTOP ENDL
-	| COUT COUTOP COUTSTR ';'
+	T_COUT T_COUTOP T_COUTSTR T_COUTOP T_ENDL
+	| T_COUT T_COUTOP T_COUTSTR ';'
 	;
 
 cinstatement:
-	CIN CINOP ID;
+	T_CIN T_CINOP T_ID;
 
 %%
 #include"lex.yy.c"

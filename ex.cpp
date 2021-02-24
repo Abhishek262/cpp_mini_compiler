@@ -1,3 +1,4 @@
+#include <iostream>
 
 int main()
 {
@@ -30,6 +31,7 @@ int main()
   case 2:
     // code block
     int b = 6;
+    // ststring 
     break;
   case 3: b = 4;
 

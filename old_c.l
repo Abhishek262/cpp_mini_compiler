@@ -61,6 +61,8 @@ class 		{ fvar = 0;return T_CLASS;}
 ">"		{ fvar = 0;return T_GT;}
 "<"		{ fvar = 0;return T_LT;}
 "."     	{ fvar = 0;return T_DOT;}
+"{"			{s_count=s_count+1;top=top+1;st[top]=s_count;return T_OPENFLOWERBRACKET ;}
+"}"				{top=top-1;return T_CLOSEFLOWERBRACKET ;}
 \/\/.* ;	
 \/\*(.*\n)*.*\*\/ ;
 .       return yytext[0];
