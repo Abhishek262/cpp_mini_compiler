@@ -47,7 +47,7 @@
 /*Flower brackets are mandatory for main*/
 
 
-Start : T_int T_main T_openParenthesis T_closedParanthesis openflower block_end_flower  	{}
+Start : T_type T_main T_openParenthesis T_closedParanthesis openflower block_end_flower  	{}
 
 
 /* This production assumes flower bracket has been opened*/
@@ -175,7 +175,7 @@ InnerSwitchStmt:  SwitchCaseStmt
 	;
 
 SwitchCaseStmt: SwitchCaseStmt SwitchCaseStmt	
-	| T_case T_int ':' stmt
+	| T_case T_intVal ':' stmt
 	| T_break ';'
 	;
 

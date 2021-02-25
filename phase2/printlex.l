@@ -39,7 +39,6 @@ compl|concept|const|consteval|constexpr|constinit|const_cast|continue|co_await|c
 bool                            {printf("T_bool  ");}
 true                            {printf("T_bool_true  ");}
 false                            {printf("T_bool_false  ");}
-"int" 																{printf("T_int  ") ; }
 "main"																{printf("T_main  ") ; }
 "int"|"auto"|"char"|"char8_t"|"char16_t"|"char32_t"|"double"|"float"|"long"|"short" 	{ printf("T_type  ") ;}
 "return" 																{printf("T_return  ");}

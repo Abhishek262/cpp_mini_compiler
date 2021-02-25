@@ -39,7 +39,6 @@ compl|concept|const|consteval|constexpr|constinit|const_cast|continue|co_await|c
 bool                            {return T_bool;}
 true                            {yylval.s.str = strdup(yytext);yylval.s.type = "bool";return T_bool_true;}
 false                            {yylval.s.str = strdup(yytext);yylval.s.type = "bool";return T_bool_false;}
-"int" 																{return T_int ; }
 "main"																{return T_main ; }
 "int"|"auto"|"char"|"char8_t"|"char16_t"|"char32_t"|"double"|"float"|"long"|"short" 	{ return T_type ;}
 "return" 																{return T_return;}
