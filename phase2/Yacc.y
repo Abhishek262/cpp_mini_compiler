@@ -13,17 +13,26 @@
 	void yyerror(const char *s);
 %}
 
+
 %union {
-    char *str;
+	struct parse_node
+	{
+		char *str;
+		char *type;
+		int intval;
+		float floatval;
+		struct ast_node * ast;
+	}s;
 }
 
-
-%token <str> T_keyword T_int T_main T_type T_return T_for T_if T_else T_while T_InputStream T_OutputStream 
-%token <str> T_openParenthesis T_closedParanthesis T_openFlowerBracket T_closedFlowerBracket 
-%token <str> T_RelationalOperator T_LogicalOperator T_UnaryOperator 
-%token <str> T_AssignmentOperator  T_Semicolon T_identifier T_numericConstants T_stringLiteral
-%token <str> T_character T_plus T_minus T_mod T_divide T_multiply
-%token <str> T_whiteSpace T_shortHand
+%token <s> T_keyword T_int T_main T_type T_return T_for T_if T_else T_while T_InputStream T_OutputStream 
+%token <s> T_openParenthesis T_closedParanthesis T_openFlowerBracket T_closedFlowerBracket 
+%token <s> T_RelationalOperator T_LogicalOperator T_UnaryOperator 
+%token <s> T_AssignmentOperator  T_Semicolon T_identifier T_numericConstants T_stringLiteral
+%token <s> T_character T_plus T_minus T_mod T_divide T_multiply
+%token <s> T_whiteSpace T_shortHand
+%token <s> T_switch T_case T_break T_default T_struct T_class T_namespace T_array T_caseop T_include T_comma T_dot
+%token <s> T_float T_double T_long
 
 %left T_LogicalAnd T_LogicalOr
 %left T_less T_less_equal T_greater T_greater_equal T_equal_equal T_not_equal
@@ -146,7 +155,7 @@ expr: 	T_numericConstants
 		| expr T_equal_equal expr
 		| expr T_not_equal expr
 		;
-
+$
 expr_or_empty: expr
 				| 
 				;

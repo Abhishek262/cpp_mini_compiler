@@ -10,9 +10,13 @@ letter [A-Za-z_]
 	int st[100];
 	int top = 0;
 	int count = 0;
+	int line = 0;
+	int column = 0;
 	void Gen_Symbol_Table(char *text,int nm,int scp);
 	void display();
 	void insert_in_st(char*, char*, int, char* );
+
+
 	// char Global_Type_Array[100];
 %}
 
@@ -23,29 +27,46 @@ letter [A-Za-z_]
 %%
 
 
-\"[^\"]*\"						{yylval.str = strdup(yytext); return T_stringLiteral;}
-"'"(.|\\n)"'"					{yylval.str = strdup(yytext); return T_character;}
+\"[^\"]*\"						{return T_stringLiteral;}
+"'"(.|\\n)"'"					{return T_character;}
 "//".*\n                        {;}
 "/*"[^*/]*"*/"					{;}
 
-
-alignas|alignof|and|and_eq|asm|atomic_cancel|atomic_commit|atomic_noexcept|bitand|bitor|break|case|catch|class|compl|concept|const|consteval|constexpr|constinit|const_cast|continue|co_await|co_return|co_yield|decltype|default|delete|do|dynamic_cast|enum|explicit|export|extern|false|friend|goto|inline|mutable|namespace|new|noexcept|not|not_eq|nullptr|operator|or|or_eq|private|protected|public|reflexpr|register|reinterpret_cast|requires|signed|sizeof|static|static_assert|static_cast|struct|switch|synchronized|template|this|thread_local|throw|true|try|typedef|typeid|typename|union|unsigned|using|virtual|void|volatile|wchar_t|xor|xor_e  {return T_keyword;}
+compl|concept|const|consteval|constexpr|constinit|const_cast|continue|co_await|co_return|co_yield|decltype|delete|do|dynamic_cast|enum|explicit|export|extern|false|friend|goto|inline|mutable|namespace|new|noexcept|not|not_eq|nullptr|operator|or|or_eq|private|protected|public|reflexpr|register|reinterpret_cast|requires|signed|sizeof|static|static_assert|static_cast|synchronized|template|this|thread_local|throw|true|try|typedef|typeid|typename|union|unsigned|using|virtual|void|volatile|wchar_t|xor|xor_e|alignas|alignof|and|and_eq|asm|atomic_cancel|atomic_commit|atomic_noexcept|bitand|bitor|catch {return T_keyword;}
 
 "if"																{return T_if ;}
 "else"																{return T_else ;}
 
-"int" 																{yylval.str = strdup(yytext); return T_int ; }
+"int" 																{return T_int ; }
 "main"																{return T_main ; }
-"auto"|"bool"|"char"|"char8_t"|"char16_t"|"char32_t"|"double"|"float"|"long"|"short" 	{yylval.str = strdup(yytext); return T_type ;}
+"auto"|"bool"|"char"|"char8_t"|"char16_t"|"char32_t"|"double"|"float"|"long"|"short" 	{ return T_type ;}
 "return" 																{return T_return;}
 
 "for"							{return T_for;}
 "while"							{return T_while;}
-
+"switch"    						{ return T_switch ;}
+"case" 							{ return T_case ;}
+"break" 							{ return T_break ;}
+"default" 						{ return T_default ;}
+"struct" 							{ return T_struct ;}
+"class" 							{ return T_class ;}
 
 "<<"							{return T_InputStream ;}
 ">>"							{return T_OutputStream ;}
+"using namespace "{letter}+		{return T_namespace	;};
 
+{letter}({letter}|{digit})* 	{Gen_Symbol_Table(yytext,yylineno,st[top]); yylval.str = strdup(yytext);return T_identifier ;}
+
+
+
+{digit}{1,10}		{return T_int;}
+{digit}{10,100}		{return T_long;}
+{digit}+"."{digit}+"e"(\+|\-)[4-9][4-9] 	{return T_double;}
+{digit}+"."{digit}+"e"(\+|\-) 	{return T_float;}
+{digit}+						{return T_numericConstants ;}
+
+
+	
 
 "("							  	{return T_openParenthesis ;}		  
 ")"								{return T_closedParanthesis ;}
@@ -60,9 +81,10 @@ alignas|alignof|and|and_eq|asm|atomic_cancel|atomic_commit|atomic_noexcept|bitan
 "!="							{return T_not_equal;}
 
 "&&"							{return T_LogicalAnd;}
-"[|][|]"						{return T_LogicalOr;}
+"||"						{return T_LogicalOr;}
 
-
+"["({digit}|{letter})*"]"   {return T_array;}
+":"	 	{return T_caseop;}
 
 "+="|"-="|"*="|"/="|"%="		{return T_shortHand;}
 
@@ -72,15 +94,12 @@ alignas|alignof|and|and_eq|asm|atomic_cancel|atomic_commit|atomic_noexcept|bitan
 "*"								{return T_multiply;}
 "%"								{return T_mod;}
 "="								{return T_AssignmentOperator ;}
+^"#include ".+ ;				{return T_include;}
 
 ";"								{return T_Semicolon ;}
+","								{T_comma;}
+"."								{T_dot;}
 
-{letter}({letter}|{digit})* 	{Gen_Symbol_Table(yytext,yylineno,st[top]); yylval.str = strdup(yytext);return T_identifier ;}
-
-{digit}+						{yylval.str = strdup(yytext); return T_numericConstants ;}
-
-
-	
 [ \t]                          {/*printf("T_whiteSpace ");*/}
 [\n]							{;}
 .								{printf("Invalid character found, Abort!!!");}
@@ -145,7 +164,7 @@ void display()
 		int h=Symbol_Table[i].up;
 		for (int j=1;j<=h;j++)
 		{
-			printf("Symbol:%s \t Scope:%d \t Line number: %s \t Type: %s \t Value: %s\n ",Symbol_Table[i].arr[j].var_name,Symbol_Table[i].arr[j].scope,Symbol_Table[i].arr[j].Line_t, Symbol_Table[i].arr[j].type, Symbol_Table[i].arr[j].value);
+			printf("Symbol:%s \t Scope:%d \t Line number: %s \t Type: %s \t Value: %s\n",Symbol_Table[i].arr[j].var_name,Symbol_Table[i].arr[j].scope,Symbol_Table[i].arr[j].Line_t, Symbol_Table[i].arr[j].type, Symbol_Table[i].arr[j].value);
 		}
 	}	
 }
