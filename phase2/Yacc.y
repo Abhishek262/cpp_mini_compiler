@@ -20,7 +20,7 @@
 		char *str;
 		char *type;
 		int intval;
-		float floatval;
+		double floatval;
 		struct ast_node * ast;
 	}s;
 }
@@ -33,6 +33,7 @@
 %token <s> T_whiteSpace T_shortHand
 %token <s> T_switch T_case T_break T_default T_struct T_class T_namespace T_array T_caseop T_include T_comma T_dot
 %token <s> T_float T_double T_long
+%token <s> T_intVal T_longVal T_doubleVal T_floatVal T_bool T_bool_true T_bool_false
 
 %left T_LogicalAnd T_LogicalOr
 %left T_less T_less_equal T_greater T_greater_equal T_equal_equal T_not_equal

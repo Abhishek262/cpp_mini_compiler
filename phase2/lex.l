@@ -28,18 +28,20 @@ letter [A-Za-z_]
 
 
 \"[^\"]*\"						{yylval.s.str = strdup(yytext);yylval.s.type = "string";return T_stringLiteral;}
-"'"(.|\\n)"'"					{return T_character;}
+"'"(.|\\n)"'"					{yylval.s.str = strdup(yytext);yylval.s.type = "character";return T_character;}
 "//".*\n                        {;}
 "/*"[^*/]*"*/"					{;}
 
-compl|concept|const|consteval|constexpr|constinit|const_cast|continue|co_await|co_return|co_yield|decltype|delete|do|dynamic_cast|enum|explicit|export|extern|false|friend|goto|inline|mutable|namespace|new|noexcept|not|not_eq|nullptr|operator|or|or_eq|private|protected|public|reflexpr|register|reinterpret_cast|requires|signed|sizeof|static|static_assert|static_cast|synchronized|template|this|thread_local|throw|true|try|typedef|typeid|typename|union|unsigned|using|virtual|void|volatile|wchar_t|xor|xor_e|alignas|alignof|and|and_eq|asm|atomic_cancel|atomic_commit|atomic_noexcept|bitand|bitor|catch {return T_keyword;}
+compl|concept|const|consteval|constexpr|constinit|const_cast|continue|co_await|co_return|co_yield|decltype|delete|do|dynamic_cast|enum|explicit|export|extern|friend|goto|inline|mutable|namespace|new|noexcept|not|not_eq|nullptr|operator|or|or_eq|private|protected|public|reflexpr|register|reinterpret_cast|requires|signed|sizeof|static|static_assert|static_cast|synchronized|template|this|thread_local|throw|try|typedef|typeid|typename|union|unsigned|using|virtual|void|volatile|wchar_t|xor|xor_e|alignas|alignof|and|and_eq|asm|atomic_cancel|atomic_commit|atomic_noexcept|bitand|bitor|catch {return T_keyword;}
 
 "if"																{return T_if ;}
 "else"																{return T_else ;}
-
+bool                            {return T_bool;}
+true                            {yylval.s.str = strdup(yytext);yylval.s.type = "bool";return T_bool_true;}
+false                            {yylval.s.str = strdup(yytext);yylval.s.type = "bool";return T_bool_false;}
 "int" 																{return T_int ; }
 "main"																{return T_main ; }
-"auto"|"bool"|"char"|"char8_t"|"char16_t"|"char32_t"|"double"|"float"|"long"|"short" 	{ return T_type ;}
+"auto"|"char"|"char8_t"|"char16_t"|"char32_t"|"double"|"float"|"long"|"short" 	{ return T_type ;}
 "return" 																{return T_return;}
 
 "for"							{return T_for;}
@@ -53,19 +55,17 @@ compl|concept|const|consteval|constexpr|constinit|const_cast|continue|co_await|c
 
 "<<"							{return T_InputStream ;}
 ">>"							{return T_OutputStream ;}
-"using namespace "{letter}+		{return T_namespace	;};
+"using namespace "{letter}+		{return T_namespace	;}
 
-{letter}({letter}|{digit})* 	{return T_identifier ;}
+{letter}({letter}|{digit})* 	{Gen_Symbol_Table(yytext,yylineno,st[top]);yylval.s.str = strdup(yytext);yylval.s.type = "Identifier";return T_identifier ;}
 
 
-{digit}{1,10}		{return T_int;}
-{digit}{10,100}		{return T_long;}
-{digit}+"."{digit}+"e"(\+|\-)[4-9][4-9] 	{return T_double;}
-{digit}+"."{digit}+"e"(\+|\-) 	{return T_float;}
+{digit}{1,10}		{yylval.s.intval = atoi(yytext);yylval.s.type = "int";return T_intVal;}
+{digit}{10,100}		{yylval.s.intval = atoi(yytext);yylval.s.type = "long";return T_longVal;}
+{digit}+"."{digit}+"e"(\+|\-)[4-9][4-9] 	{yylval.s.floatval = atof(yytext);yylval.s.type = "double";return T_doubleVal;}
+{digit}+"."{digit}+"e"(\+|\-) 	{yylval.s.floatval = atof(yytext);yylval.s.type = "float";return T_floatVal;}
 {digit}+						{return T_numericConstants ;}
 
-
-	
 
 "("							  	{return T_openParenthesis ;}		  
 ")"								{return T_closedParanthesis ;}
@@ -97,10 +97,9 @@ compl|concept|const|consteval|constexpr|constinit|const_cast|continue|co_await|c
 
 ";"								{return T_Semicolon ;}
 ","								{T_comma;}
-"."								{T_dot;}
-
-[ \t]                          {/*printf("T_whiteSpace ");*/}
-[\n]							{;}
+"."								{T_dot;}	
+[ \t]                          {;}
+[\n]							{line++;column = 0;}
 .								{printf("Invalid character found, Abort!!!");}
 
 
@@ -109,6 +108,7 @@ compl|concept|const|consteval|constexpr|constinit|const_cast|continue|co_await|c
 // + Variable name
 // + Line number to assosciate particual variable with - Line_T
 // + scope - Each opened block is assosciated with a scope number
+//
 struct var
 {
 	char var_name[20];

@@ -24,6 +24,13 @@ Terminals unused in grammar
     T_float
     T_double
     T_long
+    T_intVal
+    T_longVal
+    T_doubleVal
+    T_floatVal
+    T_bool
+    T_bool_true
+    T_bool_false
 
 
 State 107 conflicts: 1 shift/reduce
@@ -176,75 +183,82 @@ Terminals, with rules where they appear
     T_float <s> (301)
     T_double <s> (302)
     T_long <s> (303)
-    T_LogicalAnd (304) 45 61
-    T_LogicalOr (305) 46 62
-    T_less (306) 47 63
-    T_less_equal (307) 48 64
-    T_greater (308) 49 65
-    T_greater_equal (309) 50 66
-    T_equal_equal (310) 51 67
-    T_not_equal (311) 52 68
+    T_intVal <s> (304)
+    T_longVal <s> (305)
+    T_doubleVal <s> (306)
+    T_floatVal <s> (307)
+    T_bool <s> (308)
+    T_bool_true <s> (309)
+    T_bool_false <s> (310)
+    T_LogicalAnd (311) 45 61
+    T_LogicalOr (312) 46 62
+    T_less (313) 47 63
+    T_less_equal (314) 48 64
+    T_greater (315) 49 65
+    T_greater_equal (316) 50 66
+    T_equal_equal (317) 51 67
+    T_not_equal (318) 52 68
 
 
 Nonterminals, with rules where they appear
 
-    $accept (57)
+    $accept (64)
         on left: 0
-    Start (58)
+    Start (65)
         on left: 1
         on right: 0
-    block_end_flower (59)
+    block_end_flower (66)
         on left: 2 3
         on right: 1 4 20
-    block (60)
+    block (67)
         on left: 4 5 6
         on right: 15 16 17 18
-    Multiple_stmts (61)
+    Multiple_stmts (68)
         on left: 7 8
         on right: 2 7 22
-    stmt (62)
+    stmt (69)
         on left: 9 10 11 12 13 14
         on right: 2 5 7
-    for_stmt (63)
+    for_stmt (70)
         on left: 15
         on right: 12 27
-    while_stmt (64)
+    while_stmt (71)
         on left: 16
         on right: 11 26
-    if_stmt (65)
+    if_stmt (72)
         on left: 17
         on right: 10
-    elseif_else_empty (66)
+    elseif_else_empty (73)
         on left: 18 19 20 21
         on right: 17 18
-    Multiple_stmts_not_if (67)
+    Multiple_stmts_not_if (74)
         on left: 22 23
         on right: 19
-    stmt_without_if (68)
+    stmt_without_if (75)
         on left: 24 25 26 27
         on right: 22
-    Assignment_stmt (69)
+    Assignment_stmt (76)
         on left: 28 29 30 31 32 33 34
         on right: 13 25 36 38
-    expr_or_empty_with_semicolon_and_assignment (70)
+    expr_or_empty_with_semicolon_and_assignment (77)
         on left: 35 36
         on right: 15
-    expr_or_empty_with_assignment_and_closed_parent (71)
+    expr_or_empty_with_assignment_and_closed_parent (78)
         on left: 37 38
         on right: 15
-    expr_without_constants (72)
+    expr_without_constants (79)
         on left: 39 40 41 42 43 44 45 46 47 48 49 50 51 52
         on right: 30 33
-    expr (73)
+    expr (80)
         on left: 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68
         on right: 9 16 17 18 24 28 29 40 41 42 43 44 45 46 47 48 49 50 51 52 56 57 58 59 60 61 62 63 64 65 66 67 68 69
-    expr_or_empty (74)
+    expr_or_empty (81)
         on left: 69 70
         on right: 35 37
-    openflower (75)
+    openflower (82)
         on left: 71
         on right: 1 4 20
-    closeflower (76)
+    closeflower (83)
         on left: 72
         on right: 3 8
 
