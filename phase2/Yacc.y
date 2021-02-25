@@ -75,6 +75,7 @@ Multiple_stmts : stmt Multiple_stmts
 
 stmt : expr T_Semicolon					{/*Statement cannot be empty, block takes care of empty string*/}
 		| if_stmt
+		| SwitchStmt
 		| while_stmt
 		| for_stmt
 		| Assignment_stmt T_Semicolon
@@ -164,6 +165,23 @@ expr_or_empty: expr
 openflower: T_openFlowerBracket {};
 closeflower: T_closedFlowerBracket {};
 
+/* SwitchStmt Block */
+SwitchStmt:  T_switch '(' T_identifier|expr ')' '{' InnerSwitchStmt '}'
+	;
+
+/* SwitchStmt Block */
+InnerSwitchStmt:  SwitchCaseStmt
+	| SwitchCaseStmt DefaultSwitchStmt
+	;
+
+SwitchCaseStmt: SwitchCaseStmt SwitchCaseStmt	
+	| T_case T_int ':' stmt
+	| T_break ';'
+	;
+
+DefaultSwitchStmt: T_default ':' stmt  T_break ';'
+	| T_default ':' stmt
+    ;
 
 %%
 

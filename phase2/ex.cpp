@@ -3,6 +3,7 @@ int main()
 
   int externfs = 10;
   // scanf("%d",&a);
+  float  o = 7878.89;
   int a[10];
   if (reet)
   {

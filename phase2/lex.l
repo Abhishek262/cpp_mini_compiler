@@ -41,9 +41,8 @@ true                            {yylval.s.str = strdup(yytext);yylval.s.type = "
 false                            {yylval.s.str = strdup(yytext);yylval.s.type = "bool";return T_bool_false;}
 "int" 																{return T_int ; }
 "main"																{return T_main ; }
-"auto"|"char"|"char8_t"|"char16_t"|"char32_t"|"double"|"float"|"long"|"short" 	{ return T_type ;}
+"int"|"auto"|"char"|"char8_t"|"char16_t"|"char32_t"|"double"|"float"|"long"|"short" 	{ return T_type ;}
 "return" 																{return T_return;}
-
 "for"							{return T_for;}
 "while"							{return T_while;}
 "switch"    						{ return T_switch ;}
@@ -59,7 +58,7 @@ false                            {yylval.s.str = strdup(yytext);yylval.s.type = 
 
 {letter}({letter}|{digit})* 	{Gen_Symbol_Table(yytext,yylineno,st[top]);yylval.s.str = strdup(yytext);yylval.s.type = "Identifier";return T_identifier ;}
 
-
+{digit}+"."{digit}+	{yylval.s.floatval = atof(yytext);yylval.s.type = "float";return T_floatVal;}
 {digit}{1,10}		{yylval.s.intval = atoi(yytext);yylval.s.type = "int";return T_intVal;}
 {digit}{10,100}		{yylval.s.intval = atoi(yytext);yylval.s.type = "long";return T_longVal;}
 {digit}+"."{digit}+"e"(\+|\-)[4-9][4-9] 	{yylval.s.floatval = atof(yytext);yylval.s.type = "double";return T_doubleVal;}
