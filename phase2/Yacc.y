@@ -107,11 +107,11 @@ stmt_without_if : expr T_Semicolon
 
 Assignment_stmt: 	T_identifier T_AssignmentOperator expr
 					| T_identifier T_shortHand expr
-					| T_type T_identifier T_AssignmentOperator expr_without_constants   {insert_in_st($1, $2, st[top], "j");}	
-					| T_type T_identifier T_AssignmentOperator T_stringLiteral   {insert_in_st($1, $2, st[top], $4);}
-					| T_type T_identifier T_AssignmentOperator T_numericConstants   {insert_in_st($1, $2, st[top], $4);}
-					| T_int T_identifier T_AssignmentOperator expr_without_constants    {insert_in_st($1, $2, st[top], "j");}
-					| T_int T_identifier T_AssignmentOperator T_numericConstants    {insert_in_st($1, $2, st[top], $4);}
+					| T_type T_identifier T_AssignmentOperator expr_without_constants   {insert_in_st($<s.str>1, $<s.str>2, st[top], "j");}	
+					| T_type T_identifier T_AssignmentOperator T_stringLiteral   {insert_in_st($<s.str>1, $<s.str>2, st[top], $<s.str>4);}
+					| T_type T_identifier T_AssignmentOperator T_numericConstants   {insert_in_st($<s.str>1, $<s.str>2, st[top], $<s.str>4);}
+					| T_int T_identifier T_AssignmentOperator expr_without_constants    {insert_in_st($<s.str>1, $<s.str>2, st[top], "j");}
+					| T_int T_identifier T_AssignmentOperator T_numericConstants    {insert_in_st($<s.str>1, $<s.str>2, st[top], $<s.str>4);}
 				;
 
 
@@ -155,7 +155,7 @@ expr: 	T_numericConstants
 		| expr T_equal_equal expr
 		| expr T_not_equal expr
 		;
-$
+
 expr_or_empty: expr
 				| 
 				;

@@ -27,7 +27,7 @@ letter [A-Za-z_]
 %%
 
 
-\"[^\"]*\"						{return T_stringLiteral;}
+\"[^\"]*\"						{yylval.s.str = strdup(yytext);yylval.s.type = "string";return T_stringLiteral;}
 "'"(.|\\n)"'"					{return T_character;}
 "//".*\n                        {;}
 "/*"[^*/]*"*/"					{;}
@@ -55,8 +55,7 @@ compl|concept|const|consteval|constexpr|constinit|const_cast|continue|co_await|c
 ">>"							{return T_OutputStream ;}
 "using namespace "{letter}+		{return T_namespace	;};
 
-{letter}({letter}|{digit})* 	{Gen_Symbol_Table(yytext,yylineno,st[top]); yylval.str = strdup(yytext);return T_identifier ;}
-
+{letter}({letter}|{digit})* 	{return T_identifier ;}
 
 
 {digit}{1,10}		{return T_int;}
