@@ -13,6 +13,7 @@
 	void yyerror(const char *s);
 %}
 
+%locations
 
 %union {
 	struct parse_node

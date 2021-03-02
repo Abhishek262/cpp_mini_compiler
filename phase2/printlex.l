@@ -36,7 +36,7 @@ compl|concept|const|consteval|constexpr|constinit|const_cast|continue|co_await|c
 
 "if"																{printf("T_if  ") ;}
 "else"																{printf("T_else  ") ;}
-bool                            {printf("T_bool  ");}
+bool                            {printf("T_bool  ");}$
 true                            {printf("T_bool_true  ");}
 false                            {printf("T_bool_false  ");}
 "main"																{printf("T_main  ") ; }

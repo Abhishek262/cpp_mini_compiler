@@ -6,6 +6,15 @@ letter [A-Za-z_]
 	#include<stdio.h>
 	#include<stdlib.h>
 	#include<ctype.h>
+
+	int yycolumn = 1;
+	#define YY_USER_ACTION yylloc.first_line = yylloc.last_line = yylineno; 
+
+
+    // yylloc.first_column = yycolumn;
+	// yylloc.last_column = yycolumn + yyleng - 1; 
+    // yycolumn += yyleng;
+
 	int yyerror(char*);
 	int st[100];
 	int top = 0;
@@ -97,7 +106,7 @@ false                            {yylval.s.str = strdup(yytext);yylval.s.type = 
 ","								{T_comma;}
 "."								{T_dot;}	
 [ \t]                          {;}
-[\n]							{line++;column = 0;}
+[\n]							{line++;yycolumn = 1;}
 .								{printf("Invalid character found, Abort!!!");}
 
 
