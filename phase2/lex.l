@@ -81,7 +81,7 @@ false                            {yylval.s.str = strdup(yytext);yylval.s.type = 
 "||"						{return T_LogicalOr;}
 
 "["({digit}|{letter})*"]"   {return T_array;}
-":"	 	{return T_caseop;}
+":"	 	{return T_colon;}
 
 "+="|"-="|"*="|"/="|"%="		{return T_shortHand;}
 
