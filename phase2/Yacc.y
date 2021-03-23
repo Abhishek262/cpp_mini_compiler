@@ -68,7 +68,6 @@ C 	: C statement T_Semicolon
 LOOPS
       : T_if T_openParenthesis COND T_closedParanthesis LOOPBODY ELSECHAIN
       | T_switch T_openParenthesis COND T_closedParanthesis SWITCHBODY
-      | T_case
       ;
 
 ELSECHAIN
