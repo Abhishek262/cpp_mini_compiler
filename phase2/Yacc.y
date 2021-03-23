@@ -26,159 +26,177 @@
 	}s;
 }
 
-%token <s> T_keyword T_int T_main T_type T_return T_for T_if T_else T_while T_InputStream T_OutputStream 
+%token <s> T_keyword T_int T_main T_type T_return T_for T_if T_else T_while T_InputStream T_OutputStream T_cout T_endl T_cin
 %token <s> T_openParenthesis T_closedParanthesis T_openFlowerBracket T_closedFlowerBracket 
 %token <s> T_RelationalOperator T_LogicalOperator T_UnaryOperator 
 %token <s> T_AssignmentOperator  T_Semicolon T_identifier T_numericConstants T_stringLiteral
-%token <s> T_character T_plus T_minus T_mod T_divide T_multiply
+%token <s> T_character T_plus T_minus T_mod T_divide T_multiply T_incr T_decr
 %token <s> T_whiteSpace T_shortHand
-%token <s> T_switch T_case T_break T_default T_struct T_class T_namespace T_array T_caseop T_include T_comma T_dot T_colon
+%token <s> T_switch T_case T_break T_default T_struct T_class T_namespace T_array T_include T_comma T_dot T_colon
 %token <s> T_float T_double T_long
 %token <s> T_intVal T_longVal T_doubleVal T_floatVal T_bool T_bool_true T_bool_false
 
-%left T_LogicalAnd T_LogicalOr
+%left T_LogicalAnd T_LogicalOr T_LogicalNot
 %left T_less T_less_equal T_greater T_greater_equal T_equal_equal T_not_equal
-%left T_plus T_minus
+%left T_plus T_minus T_incr T_decr
 %left T_multiply T_divide T_mod
 
 
 
 %%
 
-/*Flower brackets are mandatory for main*/
+S
+      : Start {printf("Input accepted.\n");exit(0);}
+      ;
 
+Start : T_include Start
+	  | Main
 
-Start : T_type T_main T_openParenthesis T_closedParanthesis openflower block_end_flower  	{}
-
-
-/* This production assumes flower bracket has been opened*/
-block_end_flower : stmt Multiple_stmts 
-				 | closeflower
-
-/*This takes care of statements like if(...);. Note that to include multiple statements, a block has to open with a flower bracket*/
-block   : openflower block_end_flower
-	    | stmt
-	    | T_Semicolon
+Main 	: T_type T_main T_openParenthesis T_closedParanthesis Body
 		;
 
-/* block would cover anything following statement. consider the for statement for example. All possiblities are:
-for(expr;expr;expr);													(block -> ;)
-for(...) stmt          , where stmt contains T_Semicolon				(block -> stmt)
-for(...){}																(block -> {block_end_flower -> {})
-for(...){stmt, stmt, stmt, ...}											(block -> {block_end_flower -> {smt Multiple_stmts})
-for(...){stmt, if/while/for{stmt, stmt.}} , this is achieved implicity because stmt in previous can in turn be if or for while
-*/
-
-
-Multiple_stmts  : stmt Multiple_stmts
-				| closeflower
-				;
-
-stmt    : expr T_Semicolon					{/*Statement cannot be empty, block takes care of empty string*/}
-		| if_stmt
-		| switch_stmt
-		| while_stmt
-		| for_stmt
-		| Assignment_stmt T_Semicolon
-		| error T_Semicolon
+Body	: T_openFlowerBracket C T_closedFlowerBracket
 		;
 
-for_stmt : T_for T_openParenthesis expr_or_empty_with_semicolon_and_assignment  expr_or_empty_with_semicolon_and_assignment  expr_or_empty_with_assignment_and_closed_parent  block	
+C 	: C statement T_Semicolon
+	| C LOOPS	
+	| statement T_Semicolon
+	| LOOPS
+	| T_openFlowerBracket C T_closedFlowerBracket
+	;
 
-while_stmt : T_while T_openParenthesis expr T_closedParanthesis block
+LOOPS
+      : T_if T_openParenthesis COND T_closedParanthesis LOOPBODY ELSECHAIN
+      | T_switch T_openParenthesis COND T_closedParanthesis SWITCHBODY
+      | T_case
+      ;
 
-switch_stmt : T_switch T_openParenthesis expr_without_constants T_closedParanthesis switch_block
+ELSECHAIN
+      : T_else T_if T_openParenthesis COND T_closedParanthesis LOOPBODY ELSECHAIN
+      | T_else LOOPBODY
+      |
+      ;
 
-switch_block_end_flower : case_stmt closeflower
-						| closeflower
+LOOPBODY
+  	  : T_openFlowerBracket C T_closedFlowerBracket
+  	  | T_Semicolon
+  	  | statement T_Semicolon
+  	  ;
 
-switch_block : openflower switch_block_end_flower
-			 | case_stmt
-			 | T_Semicolon
-			 ;
+SWITCHBODY
+  	  : T_openFlowerBracket CASES T_closedFlowerBracket
+  	  | T_Semicolon
+  	  | statement T_Semicolon
+  	  ;
 
-case_stmt : T_case expr T_colon Multiple_stmts case_stmt
-		  | T_default T_colon Multiple_stmts case_stmt
-		  |
-		  ;
+CASES
+	: T_case CASEVAL
+	| T_Semicolon
+	| statement T_Semicolon
+	| T_default T_colon DEFCASEC
+	|
+	;
 
-if_stmt : T_if T_openParenthesis expr T_closedParanthesis block elseif_else_empty
+statement
+      : ASSIGN_EXPR
+      | ARITH_EXPR
+      | PRINT
+      | T_break
+      ;
 
-elseif_else_empty 	: T_else T_if T_openParenthesis expr T_closedParanthesis block elseif_else_empty
-					| T_else Multiple_stmts_not_if
-					| T_else openflower block_end_flower
-					|
-					;
+COND
+      : LIT RELOP LIT
+      | LIT
+      | LIT RELOP LIT bin_boolop LIT RELOP LIT
+      | un_boolop T_openParenthesis LIT RELOP LIT T_closedParanthesis
+      | un_boolop LIT RELOP LIT
+      | LIT bin_boolop LIT
+      | un_boolop T_openParenthesis LIT T_closedParanthesis
+      | un_boolop LIT
+      ;
 
-Multiple_stmts_not_if 	: stmt_without_if Multiple_stmts
-						| T_Semicolon
-						;
+ASSIGN_EXPR
+      : T_identifier T_AssignmentOperator ARITH_EXPR
+      | T_type T_identifier T_AssignmentOperator ARITH_EXPR
+      ;
 
-stmt_without_if : expr T_Semicolon
-				| Assignment_stmt T_Semicolon
-				| while_stmt
-				|for_stmt
-				;
+ARITH_EXPR
+      : LIT
+      | LIT bin_arop ARITH_EXPR
+      | LIT bin_boolop ARITH_EXPR
+      | LIT un_arop
+      | un_arop ARITH_EXPR
+      | un_boolop ARITH_EXPR
+      ;
 
+PRINT
+      : T_cout T_less T_less T_stringLiteral
+      | T_cout T_less T_less T_stringLiteral T_less T_less T_endl
+      ;
 
-Assignment_stmt : T_identifier T_AssignmentOperator expr
-				| T_identifier T_shortHand expr
-				| T_type T_identifier T_AssignmentOperator expr_without_constants   {insert_in_st($<s.str>1, $<s.str>2, st[top], "j");}	
-				| T_type T_identifier T_AssignmentOperator T_stringLiteral   {insert_in_st($<s.str>1, $<s.str>2, st[top], $<s.str>4);}
-				| T_type T_identifier T_AssignmentOperator T_numericConstants   {insert_in_st($<s.str>1, $<s.str>2, st[top], $<s.str>4);}
-				| T_int T_identifier T_AssignmentOperator expr_without_constants    {insert_in_st($<s.str>1, $<s.str>2, st[top], "j");}
-				| T_int T_identifier T_AssignmentOperator T_numericConstants    {insert_in_st($<s.str>1, $<s.str>2, st[top], $<s.str>4);}
-				;
+CASEVAL
+      : LIT T_colon CASEC
+      ;
 
+CASEC
+      : C
+      | T_case CASEVAL
+      | C T_case CASEVAL
+      | T_default T_colon DEFCASEC
+      | C T_default T_colon DEFCASEC
+      ;
 
-expr_or_empty_with_semicolon_and_assignment : expr_or_empty T_Semicolon
-	                                        | Assignment_stmt T_Semicolon
+DEFCASEVAL
+      : LIT T_colon DEFCASEC
+      ;
 
-expr_or_empty_with_assignment_and_closed_parent : expr_or_empty T_closedParanthesis
-	                                            | Assignment_stmt T_closedParanthesis
+DEFCASEC
+      : C
+      | T_case DEFCASEVAL
+      | C T_case DEFCASEVAL
+      ;
 
-expr_without_constants  : T_identifier
-						| expr T_plus expr
-						| expr T_minus expr
-						| expr T_divide expr
-						| expr T_multiply expr
-						| expr T_mod expr
-						| expr T_LogicalAnd expr
-						| expr T_LogicalOr expr
-						| expr T_less expr
-						| expr T_less_equal expr
-						| expr T_greater expr
-						| expr T_greater_equal expr
-						| expr T_equal_equal expr
-						| expr T_not_equal expr
-						;
+LIT
+	: T_identifier
+	| T_numericConstants
+	| T_intVal
+	| T_floatVal
+	| T_doubleVal
+	| T_longVal
+	| T_stringLiteral
+	| T_character
+	;
 
+/* use T_type for types */
 
-expr    : T_numericConstants
-		| T_stringLiteral
-		| T_identifier
-		| expr T_plus expr
-		| expr T_minus expr
-		| expr T_divide expr
-		| expr T_multiply expr
-		| expr T_mod expr
-		| expr T_LogicalAnd expr
-		| expr T_LogicalOr expr
-		| expr T_less expr
-		| expr T_less_equal expr
-		| expr T_greater expr
-		| expr T_greater_equal expr
-		| expr T_equal_equal expr
-		| expr T_not_equal expr
-		;
+RELOP
+      : T_less
+      | T_greater
+      | T_less_equal
+      | T_greater_equal
+      | T_not_equal
+      | T_equal_equal
+      ;
 
-expr_or_empty   : expr
-				| 
-				;
+bin_arop
+      : T_plus
+      | T_minus
+      | T_multiply
+      | T_divide
+      ;
 
-openflower : T_openFlowerBracket {};
+bin_boolop
+      : T_LogicalAnd
+      | T_LogicalOr
+      ;
 
-closeflower : T_closedFlowerBracket {};
+un_arop
+      : T_incr
+      | T_decr
+      ;
+
+un_boolop	: T_LogicalNot
+			;
 
 %%
 

@@ -36,13 +36,17 @@ letter [A-Za-z_]
 %%
 
 
-\"[^\"]*\"						{yylval.s.str = strdup(yytext);yylval.s.type = "string";return T_stringLiteral;}
-"'"(.|\\n)"'"					{yylval.s.str = strdup(yytext);yylval.s.type = "character";return T_character;}
+\".+\"						{yylval.s.str = strdup(yytext);yylval.s.type = "string";return T_stringLiteral;}
+\'.\'					{yylval.s.str = strdup(yytext);yylval.s.type = "character";return T_character;}
 "//".*\n                        {;}
 "/*"[^*/]*"*/"					{;}
+("#include"|"#include ")(("<".+">")|(\".+\"))	{return T_include;}
 
 compl|concept|const|consteval|constexpr|constinit|const_cast|continue|co_await|co_return|co_yield|decltype|delete|do|dynamic_cast|enum|explicit|export|extern|friend|goto|inline|mutable|namespace|new|noexcept|not|not_eq|nullptr|operator|or|or_eq|private|protected|public|reflexpr|register|reinterpret_cast|requires|signed|sizeof|static|static_assert|static_cast|synchronized|template|this|thread_local|throw|try|typedef|typeid|typename|union|unsigned|using|virtual|void|volatile|wchar_t|xor|xor_e|alignas|alignof|and|and_eq|asm|atomic_cancel|atomic_commit|atomic_noexcept|bitand|bitor|catch {return T_keyword;}
 
+"cout"							{return T_cout;}
+"endl"							{return T_endl;}
+"cin"							{return T_cin;}
 "if"																{return T_if ;}
 "else"																{return T_else ;}
 bool                            {return T_bool;}
@@ -87,20 +91,22 @@ false                            {yylval.s.str = strdup(yytext);yylval.s.type = 
 "!="							{return T_not_equal;}
 
 "&&"							{return T_LogicalAnd;}
-"||"						{return T_LogicalOr;}
+"||"							{return T_LogicalOr;}
+"!"								{return T_LogicalNot;}
 
 "["({digit}|{letter})*"]"   {return T_array;}
 ":"	 	{return T_colon;}
 
 "+="|"-="|"*="|"/="|"%="		{return T_shortHand;}
 
+"++"							{return T_incr;}
 "+"								{return T_plus;}
+"--"							{return T_decr;}
 "-"								{return T_minus;}
 "/"								{return T_divide;}
 "*"								{return T_multiply;}
 "%"								{return T_mod;}
 "="								{return T_AssignmentOperator ;}
-^"#include ".+ ;				{return T_include;}
 
 ";"								{return T_Semicolon ;}
 ","								{T_comma;}
