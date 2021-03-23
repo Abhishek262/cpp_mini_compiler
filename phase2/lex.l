@@ -42,7 +42,7 @@ letter [A-Za-z_]
 "/*"[^*/]*"*/"					{;}
 ("#include"|"#include ")(("<".+">")|(\".+\"))	{return T_include;}
 
-compl|concept|const|consteval|constexpr|constinit|const_cast|continue|co_await|co_return|co_yield|decltype|delete|do|dynamic_cast|enum|explicit|export|extern|friend|goto|inline|mutable|namespace|new|noexcept|not|not_eq|nullptr|operator|or|or_eq|private|protected|public|reflexpr|register|reinterpret_cast|requires|signed|sizeof|static|static_assert|static_cast|synchronized|template|this|thread_local|throw|try|typedef|typeid|typename|union|unsigned|using|virtual|void|volatile|wchar_t|xor|xor_e|alignas|alignof|and|and_eq|asm|atomic_cancel|atomic_commit|atomic_noexcept|bitand|bitor|catch {return T_keyword;}
+struct|class|for|while|compl|concept|const|consteval|constexpr|constinit|const_cast|continue|co_await|co_return|co_yield|decltype|delete|do|dynamic_cast|enum|explicit|export|extern|friend|goto|inline|mutable|new|noexcept|not|not_eq|nullptr|operator|or|or_eq|private|protected|public|reflexpr|register|reinterpret_cast|requires|signed|sizeof|static|static_assert|static_cast|synchronized|template|this|thread_local|throw|try|typedef|typeid|typename|union|unsigned|using|virtual|void|volatile|wchar_t|xor|xor_e|alignas|alignof|and|and_eq|asm|atomic_cancel|atomic_commit|atomic_noexcept|bitand|bitor|catch {return T_keyword;}
 
 "cout"							{return T_cout;}
 "endl"							{return T_endl;}
@@ -54,19 +54,14 @@ true                            {yylval.s.str = strdup(yytext);yylval.s.type = "
 false                            {yylval.s.str = strdup(yytext);yylval.s.type = "bool";return T_bool_false;}
 "main"																{return T_main ; }
 "int"|"auto"|"char"|"char8_t"|"char16_t"|"char32_t"|"double"|"float"|"long"|"short" 	{ return T_type ;}
-"return" 																{return T_return;}
-"for"							{return T_for;}
-"while"							{return T_while;}
 "switch"    						{ return T_switch ;}
 "case" 							{ return T_case ;}
 "break" 							{ return T_break ;}
 "default" 						{ return T_default ;}
-"struct" 							{ return T_struct ;}
-"class" 							{ return T_class ;}
 
 "<<"							{return T_InputStream ;}
 ">>"							{return T_OutputStream ;}
-"using namespace "{letter}+		{return T_namespace	;}
+"using namespace "{letter}+";"		{return T_namespace	;}
 
 {letter}({letter}|{digit})* 	{Gen_Symbol_Table(yytext,yylineno,st[top]);yylval.s.str = strdup(yytext);yylval.s.type = "Identifier";return T_identifier ;}
 
@@ -97,7 +92,6 @@ false                            {yylval.s.str = strdup(yytext);yylval.s.type = 
 "["({digit}|{letter})*"]"   {return T_array;}
 ":"	 	{return T_colon;}
 
-"+="|"-="|"*="|"/="|"%="		{return T_shortHand;}
 
 "++"							{return T_incr;}
 "+"								{return T_plus;}

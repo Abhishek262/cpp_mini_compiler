@@ -26,14 +26,11 @@
 	}s;
 }
 
-%token <s> T_keyword T_int T_main T_type T_return T_for T_if T_else T_while T_InputStream T_OutputStream T_cout T_endl T_cin
+%token <s> T_keyword T_main T_type T_if T_else T_InputStream T_OutputStream T_cout T_endl T_cin
 %token <s> T_openParenthesis T_closedParanthesis T_openFlowerBracket T_closedFlowerBracket 
-%token <s> T_RelationalOperator T_LogicalOperator T_UnaryOperator 
 %token <s> T_AssignmentOperator  T_Semicolon T_identifier T_numericConstants T_stringLiteral
 %token <s> T_character T_plus T_minus T_mod T_divide T_multiply T_incr T_decr
-%token <s> T_whiteSpace T_shortHand
-%token <s> T_switch T_case T_break T_default T_struct T_class T_namespace T_array T_include T_comma T_dot T_colon
-%token <s> T_float T_double T_long
+%token <s> T_switch T_case T_break T_default T_namespace T_array T_include T_comma T_dot T_colon
 %token <s> T_intVal T_longVal T_doubleVal T_floatVal T_bool T_bool_true T_bool_false
 
 %left T_LogicalAnd T_LogicalOr T_LogicalNot
@@ -50,7 +47,8 @@ S
       ;
 
 Start : T_include Start
-	  | Main
+      | T_include T_namespace Start
+      | Main
 
 Main 	: T_type T_main T_openParenthesis T_closedParanthesis Body
 		;
@@ -100,6 +98,7 @@ statement
       : ASSIGN_EXPR
       | ARITH_EXPR
       | PRINT
+      | INPUT
       | T_break
       ;
 
@@ -129,8 +128,17 @@ ARITH_EXPR
       ;
 
 PRINT
-      : T_cout T_less T_less T_stringLiteral
-      | T_cout T_less T_less T_stringLiteral T_less T_less T_endl
+      : T_cout T_OutputStream T_stringLiteral
+      | T_cout T_OutputStream T_stringLiteral T_OutputStream T_endl
+      ;
+
+INPUT
+      : T_cin INPUTS
+      ;
+
+INPUTS
+      : T_InputStream T_identifier INPUTS
+      | T_InputStream T_identifier
       ;
 
 CASEVAL
@@ -182,6 +190,7 @@ bin_arop
       | T_minus
       | T_multiply
       | T_divide
+      | T_mod
       ;
 
 bin_boolop
