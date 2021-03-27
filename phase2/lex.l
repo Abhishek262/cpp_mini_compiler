@@ -53,7 +53,7 @@ bool                            {return T_bool;}
 true                            {yylval.s.str = strdup(yytext);yylval.s.type = "bool";return T_bool_true;}
 false                            {yylval.s.str = strdup(yytext);yylval.s.type = "bool";return T_bool_false;}
 "main"																{return T_main ; }
-"int"|"auto"|"char"|"char8_t"|"char16_t"|"char32_t"|"double"|"float"|"long"|"short" 	{ return T_type ;}
+"int"|"auto"|"char"|"char8_t"|"char16_t"|"char32_t"|"double"|"float"|"long"|"short" 	{ yylval.s.type = strdup(yytext);return T_type ;}
 "switch"    						{ return T_switch ;}
 "case" 							{ return T_case ;}
 "break" 							{ return T_break ;}
@@ -170,7 +170,8 @@ void display()
 		int h=Symbol_Table[i].up;
 		for (int j=1;j<=h;j++)
 		{
-			printf("Symbol:%s \t Scope:%d \t Line number: %s \t Type: %s \t Value: %s\n",Symbol_Table[i].arr[j].var_name,Symbol_Table[i].arr[j].scope,Symbol_Table[i].arr[j].Line_t, Symbol_Table[i].arr[j].type, Symbol_Table[i].arr[j].value);
+			// printf("%d,%d\n",i,j);
+			printf("Symbol:%s \t Scope:%d \t Line number: %s \t Type: %s \t \n",Symbol_Table[i].arr[j].var_name,Symbol_Table[i].arr[j].scope,Symbol_Table[i].arr[j].Line_t, Symbol_Table[i].arr[j].type);
 		}
 	}	
 }
@@ -190,5 +191,32 @@ void insert_in_st(char* type, char* id, int scp, char* value)
 
 int yywrap()
 {
+	// for(int i=0;i<=count;i++)
+	// {
+	// 	int h1=Symbol_Table[i].up;
+	// 	for (int j=1;j<=h1;j++)
+	// 	{
+	// 		if(Symbol_Table[i].arr[j].type!=""){
+	// 			for(int k=0;k<=count;k++)
+	// 			{
+	// 				int h2=Symbol_Table[k].up;
+	// 				for (int l=1;l<=h2;l++)
+	// 				{`
+
+	// 					strcpy(Symbol_Table[i].arr[j].type, Symbol_Table[k].arr[l].type);
+											
+	// 				}
+	// 			}	
+	// 		}
+	// 	}
+	// }	
+
 	return 1;
 }
+
+// int main()
+// {
+// 	yylex();
+	
+// 	display();
+// }

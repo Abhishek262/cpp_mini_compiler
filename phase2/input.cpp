@@ -3,8 +3,11 @@
 using namespace std;
 int main()
 {
-  int a = 22;
+
+  int x=2;
   int b=2;
+  int c=34;
+  int a = 8;
   if(a==2)
   {
     a=6;

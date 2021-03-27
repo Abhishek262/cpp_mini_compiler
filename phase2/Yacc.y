@@ -19,7 +19,7 @@
 	struct parse_node
 	{
 		char *str;
-		char *type;
+		char *type ;
 		int intval;
 		double floatval;
 		struct ast_node * ast;
@@ -43,7 +43,7 @@
 %%
 
 S
-      : Start {printf("Input accepted.\n");exit(0);}
+      : Start {printf("Reading input");}
       ;
 
 Start : T_include Start
@@ -114,8 +114,8 @@ COND
       ;
 
 ASSIGN_EXPR
-      : T_identifier T_AssignmentOperator ARITH_EXPR
-      | T_type T_identifier T_AssignmentOperator ARITH_EXPR
+      : T_identifier T_AssignmentOperator ARITH_EXPR 
+      | T_type T_identifier T_AssignmentOperator ARITH_EXPR {insert_in_st($<s.type>1, $<s.str>2, st[top], "j");}
       ;
 
 ARITH_EXPR
