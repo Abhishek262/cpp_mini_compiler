@@ -170,7 +170,7 @@ void display()
 		int h=Symbol_Table[i].up;
 		for (int j=1;j<=h;j++)
 		{
-			// printf("%d,%d\n",i,j);
+			printf("%d,%d\n",i,j);
 			printf("Symbol:%s \t Scope:%d \t Line number: %s \t Type: %s \t \n",Symbol_Table[i].arr[j].var_name,Symbol_Table[i].arr[j].scope,Symbol_Table[i].arr[j].Line_t, Symbol_Table[i].arr[j].type);
 		}
 	}	
@@ -178,7 +178,7 @@ void display()
 
 void insert_in_st(char* type, char* id, int scp, char* value)
 {
-	
+	// display();
 	for(int i=0;i<=Symbol_Table[scp].up;i++)
 	{
 		if(strcmp(Symbol_Table[scp].arr[i].var_name,id)==0)
@@ -191,25 +191,25 @@ void insert_in_st(char* type, char* id, int scp, char* value)
 
 int yywrap()
 {
-	// for(int i=0;i<=count;i++)
-	// {
-	// 	int h1=Symbol_Table[i].up;
-	// 	for (int j=1;j<=h1;j++)
-	// 	{
-	// 		if(Symbol_Table[i].arr[j].type!=""){
-	// 			for(int k=0;k<=count;k++)
-	// 			{
-	// 				int h2=Symbol_Table[k].up;
-	// 				for (int l=1;l<=h2;l++)
-	// 				{`
+	for(int i=0;i<=count;i++)
+	{
+		int h1=Symbol_Table[i].up;
+		for (int j=1;j<=h1;j++)
+		{
+			if(Symbol_Table[i].arr[j].type!=""){
+				for(int k=0;k<=count;k++)
+				{
+					int h2=Symbol_Table[k].up;
+					for (int l=1;l<=h2;l++)
+					{
 
-	// 					strcpy(Symbol_Table[i].arr[j].type, Symbol_Table[k].arr[l].type);
+						strcpy(Symbol_Table[i].arr[j].type, Symbol_Table[k].arr[l].type);
 											
-	// 				}
-	// 			}	
-	// 		}
-	// 	}
-	// }	
+					}
+				}	
+			}
+		}
+	}	
 
 	return 1;
 }

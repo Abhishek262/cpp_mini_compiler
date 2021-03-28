@@ -1,11 +1,8 @@
-#include <stdio.h>
-#include <stdlib.h>
-using namespace std;
 int main()
 {
 
   float x=2;
-  int b=2;jhjh
+  int b=2;
   int c=34;
   int a = 8;
   if(a==2)
@@ -17,6 +14,7 @@ int main()
     default: if (3>2) {
       if (a == 2) {
         b=a;
+        a = 3+b;
       }
     }
   }
