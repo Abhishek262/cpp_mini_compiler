@@ -470,19 +470,20 @@
 
 %define parse.error verbose
 
-%token <str> T_keyword T_int T_main T_type T_return T_for T_if T_else T_while T_InputStream T_OutputStream 
+%token <str> T_keyword T_main T_type T_return T_for T_if T_else T_while T_InputStream T_OutputStream 
 %token <str> T_openParenthesis T_closedParanthesis T_openFlowerBracket T_closedFlowerBracket 
 %token <str> T_RelationalOperator T_LogicalOperator T_UnaryOperator 
 %token <str> T_AssignmentOperator  T_Semicolon T_identifier T_numericConstants T_stringLiteral
 %token <str> T_character T_plus T_minus T_mod T_divide T_multiply error
+%token <str> T_switch T_case T_break T_default T_include T_cout T_cin T_endl T_colon 
 %token <str> T_whiteSpace T_shortHand
 
-%left T_LogicalAnd T_LogicalOr
+%left T_LogicalAnd T_LogicalOr T_LogicalNot
 %left T_less T_less_equal T_greater T_greater_equal T_equal_equal T_not_equal
 %left T_plus T_minus
 %left T_multiply T_divide T_mod
 
-%type <NODE> Start block_end_flower block Multiple_stmts stmt
+%type <NODE> S Start Main Body block_end_flower block Multiple_stmts stmt
 %type <NODE> if_stmt Multiple_stmts_not_if elseif_else_empty stmt_without_if
 %type <NODE> expr_without_constants expr expr_or_empty closeflower
 %type <NODE> Assignment_stmt
@@ -492,52 +493,37 @@
 
 %%
 
-/*Flower brackets are mandatory for main*/
+S	: Start		{$$ = $1; printf("Reading input");}
+	;
 
+Start : T_include Start					{$$ = $2;}
+      | T_include T_namespace Start		{$$ = $3;}
+      | Main							{$$ = $1;}
 
-Start : T_int T_main T_openParenthesis T_closedParanthesis openflower block_end_flower  	{$$ = $6;}	//openflower is T_openflowerBracket
+Main : T_type T_main T_openParenthesis T_closedParanthesis Body		{$$ = $6;}
 
+Body : openflower block_end_flower		{$$ = $2;}
 
-/* This production assumes flower bracket has been opened*/
-block_end_flower : stmt Multiple_stmts 							{$$ = $1;}		//Multiple_stmts closes the flower bracket. 
-				| closeflower 									{$$ = Construct_AST(NULL, NULL, ";"); }	//closeflower is T_closedFlowerBracket. 
-				//closeflower is only parsed here for an empty block 
+block_end_flower	: stmt Multiple_stmts 					{$$ = $1;}		//Multiple_stmts closes the flower bracket. 
+					| closeflower 							{$$ = Construct_AST(NULL, NULL, ";"); }
 
-
-/*This takes care of statements like if(...);. Note that to include multiple statements, a block has to open with a flower bracket*/
-block :  openflower block_end_flower						{$$ = $2;}		//takes care of {}, {stmt, stmt, ...}
+block	: openflower block_end_flower						{$$ = $2;}		//takes care of {}, {stmt, stmt, ...}
 	    | stmt												{$$ = $1;}		//takes care of just a single statement followed by semicolon
 	    | T_Semicolon										{$$ = Construct_AST(NULL, NULL, ";"); }
 		;
 
-/* block would cover anything following statement. consider the for statement for example. All possiblities are:
-for(expr;expr;expr);													(block -> ;)
-for(...) stmt          , where stmt contains T_Semicolon				(block -> stmt)
-for(...){}																(block -> {block_end_flower -> {})
-for(...){stmt, stmt, stmt, ...}											(block -> {block_end_flower -> {smt Multiple_stmts})
-for(...){stmt, if/while/for{stmt, stmt.}} , this is achieved implicity because stmt in previous can in turn be if or for while
-*/
+Multiple_stmts	: stmt Multiple_stmts						{$$ = $1;}
+				| closeflower 								{$$ = Construct_AST(NULL, NULL, ";"); }
+				;
 
-
-Multiple_stmts : stmt Multiple_stmts						{$$ = $1;}
-		|closeflower 										{$$ = Construct_AST(NULL, NULL, ";"); }
-		;
-
-/*
-A statement can be if, while, for, assignment or expression not assigned to anything in the scope of this project.
-*/
-
-stmt : expr T_Semicolon					{$$ = $1; Display_tree($$); fprintf(ast_tree_output, "\n");}
+stmt 	: expr T_Semicolon				{$$ = $1; Display_tree($$); fprintf(ast_tree_output, "\n");}
 		| if_stmt						{$$ = $1; Display_tree($$); fprintf(ast_tree_output, "\n");}
-		| while_stmt					{$$ = $1; Display_tree($$);fprintf(ast_tree_output, "\n");}
+		| while_stmt					{$$ = $1; Display_tree($$); fprintf(ast_tree_output, "\n");}
 		| for_stmt						{$$ = $1; Display_tree($$); fprintf(ast_tree_output, "\n");}
 		| switch_stmt					{$$ = $1; Display_tree($$); fprintf(ast_tree_output, "\n");}
 		| Assignment_stmt T_Semicolon	{$$ = $1; Display_tree($$); fprintf(ast_tree_output, "\n");}
 		| error T_Semicolon 			{$$ = Construct_AST(NULL, NULL, ";"); }
 		;
-
-
-//for_stmt : T_for T_openParenthesis expr_with_semicolon expr_with_semicolon expr_or_empty T_closedParanthesis block
 
 for_stmt : T_for T_openParenthesis expr_or_empty_with_semicolon_and_assignment {FOR_label();} expr_or_empty_with_semicolon_and_assignment {FOR_Condition();} expr_or_empty_with_assignment_and_closed_parent {FOR_INC_Cond();} block	{{ 	FOR_End();node* left;
 																																	node* right;
@@ -546,40 +532,36 @@ for_stmt : T_for T_openParenthesis expr_or_empty_with_semicolon_and_assignment {
 																																	$$ = Construct_AST(left,right,"FOR");
 																																	}}
 
-
-
-// Condition : 		{}
-
 while_stmt : T_while {While_Loop_Label();} T_openParenthesis expr T_closedParanthesis {While_loop_cond();} block			{While_END();$$ = Construct_AST($3, $5, "While"); }
-//While_Loop_Label() and While_loop_cond() are  embedded actions
-//while_end() adds goto label 
 
 if_stmt : T_if T_openParenthesis expr T_closedParanthesis {IFSTMT();} block elseif_else_empty {$$ = Construct_AST($3, $6, "IF");}
 
-elseif_else_empty : T_else T_if T_openParenthesis expr T_closedParanthesis {;Elif();} block elseif_else_empty {$$ = Construct_AST($4, $7, "ELSEIF"); }
+elseif_else_empty 	: T_else T_if T_openParenthesis expr T_closedParanthesis {;Elif();} block elseif_else_empty {$$ = Construct_AST($4, $7, "ELSEIF"); }
 					| T_else {if_else_cleanup();} Multiple_stmts_not_if {$$ = $3;}
 					| T_else {if_else_cleanup();} openflower block_end_flower {$$ = $4;}
 					| {if_else_cleanup(); $$ = Construct_AST(NULL, NULL, ";"); }
 					;
 
-Multiple_stmts_not_if : stmt_without_if Multiple_stmts {$$ = $1;}
-					|T_Semicolon {$$ = Construct_AST(NULL, NULL, ";"); }
-					;
+Multiple_stmts_not_if	: stmt_without_if Multiple_stmts 				{$$ = $1;}
+						| T_Semicolon 									{$$ = Construct_AST(NULL, NULL, ";"); }
+						;
 
-stmt_without_if : expr T_Semicolon										{$$ = $1;}
+stmt_without_if		: expr T_Semicolon									{$$ = $1;}
 					| Assignment_stmt T_Semicolon						{$$ = $1;Display_tree($$);fprintf(ast_tree_output, "\n");}
 					| while_stmt										{$$ = $1;}
 					|for_stmt											{$$ = $1;}
 					;
 
-Assignment_stmt: 	idid T_AssignmentOperator expr											{push("=");TAC_assign();$$ = Construct_AST($1,$3,"=");}
+switch_stmt	:	T_switch T_openParenthesis COND T_closedParanthesis SWITCHBODY
+
+Assignment_stmt		: idid T_AssignmentOperator expr										{push("=");TAC_assign();$$ = Construct_AST($1,$3,"=");}
 					| idid T_shortHand expr													{push("se");TAC_assign();$$ = Construct_AST($1,$3,"SE"); }
 					| T_type idid T_AssignmentOperator expr_without_constants   			{push("=");strcpy(G_val,$2->token);TAC_assign_back();insert_in_st($1, $2->token, st[top], "j");$$ = Construct_AST($2,$4,"=");}	
-					| T_type idid T_AssignmentOperator sc   {push("=");TAC_assign();insert_in_st($1, $2->token, st[top], $4->token);$$ = Construct_AST($2,$4,"=");}
-					| T_type idid T_AssignmentOperator nc   {push("=");TAC_assign();insert_in_st($1, $2->token, st[top], $4->token);$$ = Construct_AST($2,$4,"=");}
+					| T_type idid T_AssignmentOperator sc   								{push("=");TAC_assign();insert_in_st($1, $2->token, st[top], $4->token);$$ = Construct_AST($2,$4,"=");}
+					| T_type idid T_AssignmentOperator nc   								{push("=");TAC_assign();insert_in_st($1, $2->token, st[top], $4->token);$$ = Construct_AST($2,$4,"=");}
 					| T_int idid T_AssignmentOperator expr_without_constants    			{push("=");strcpy(G_val,$2->token);TAC_assign_back();insert_in_st($1, $2->token, st[top], "j");$$ = Construct_AST($2,$4,"=");}
-					| T_int idid T_AssignmentOperator nc    {push("=");TAC_assign();insert_in_st($1, $2->token, st[top], $4->token);$$ = Construct_AST($2,$4,"=");}
-				;
+					| T_int idid T_AssignmentOperator nc    								{push("=");TAC_assign();insert_in_st($1, $2->token, st[top], $4->token);$$ = Construct_AST($2,$4,"=");}
+					;
 
 
 
