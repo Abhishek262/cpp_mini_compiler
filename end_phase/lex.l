@@ -17,7 +17,7 @@ letter [A-Za-z_]
 %}
 
 
-
+ 
 %option yylineno
 
 %%
@@ -30,7 +30,7 @@ letter [A-Za-z_]
 ("#include"|"#include ")(("<".+">")|(\".+\"))	{return T_include;}
 
 
-alignas|alignof|and|and_eq|asm|atomic_cancel|atomic_commit|atomic_noexcept|bitand|bitor|break|case|catch|class|compl|concept|const|consteval|constexpr|constinit|const_cast|continue|co_await|co_return|co_yield|decltype|default|delete|do|dynamic_cast|enum|explicit|export|extern|false|friend|goto|inline|mutable|namespace|new|noexcept|not|not_eq|nullptr|operator|or|or_eq|private|protected|public|reflexpr|register|reinterpret_cast|requires|signed|sizeof|static|static_assert|static_cast|struct|switch|synchronized|template|this|thread_local|throw|true|try|typedef|typeid|typename|union|unsigned|using|virtual|void|volatile|wchar_t|xor|xor_e  {return T_keyword;}
+alignas|alignof|and|and_eq|asm|atomic_cancel|atomic_commit|atomic_noexcept|bitand|bitor|catch|class|compl|concept|const|consteval|constexpr|constinit|const_cast|continue|co_await|co_return|co_yield|decltype|delete|do|dynamic_cast|enum|explicit|export|extern|false|friend|goto|inline|mutable|namespace|new|noexcept|not|not_eq|nullptr|operator|or|or_eq|private|protected|public|reflexpr|register|reinterpret_cast|requires|signed|sizeof|static|static_assert|static_cast|struct|synchronized|template|this|thread_local|throw|true|try|typedef|typeid|typename|union|unsigned|using|virtual|void|volatile|wchar_t|xor|xor_e  {return T_keyword;}
 
 "cout"							{return T_cout;}
 "endl"							{return T_endl;}
@@ -45,10 +45,10 @@ alignas|alignof|and|and_eq|asm|atomic_cancel|atomic_commit|atomic_noexcept|bitan
 
 "for"							{return T_for;}
 "while"							{return T_while;}
-"switch"    					{return T_switch ;}
-"case" 							{return T_case ;}
-"break" 						{return T_break ;}
-"default" 						{return T_default ;}
+"switch"    					{return T_switch;}
+"case" 							{return T_case;}
+"break" 						{return T_break;}
+"default" 						{return T_default;}
 ":"	 	                        {return T_colon;}
 
 
@@ -85,7 +85,8 @@ alignas|alignof|and|and_eq|asm|atomic_cancel|atomic_commit|atomic_noexcept|bitan
 ";"								{return T_Semicolon ;}
 
 {letter}({letter}|{digit})* 	{Gen_Symbol_Table(yytext,yylineno,st[top]); yylval.str = strdup(yytext);return T_identifier ;}
-
+{digit}+"."{digit}+				{yylval.str = strdup(yytext); return T_floatVal;}
+{digit}+"."{digit}+"e"(\+|\-) 	{yylval.str = strdup(yytext); return T_floatValE;}
 {digit}+						{yylval.str = strdup(yytext); return T_numericConstants ;}
 
 

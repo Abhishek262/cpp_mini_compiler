@@ -468,15 +468,14 @@
 
 
 
-%define parse.error verbose
 
 %token <str> T_keyword T_main T_type T_return T_for T_if T_else T_while T_InputStream T_OutputStream 
 %token <str> T_openParenthesis T_closedParanthesis T_openFlowerBracket T_closedFlowerBracket 
 %token <str> T_RelationalOperator T_LogicalOperator T_UnaryOperator 
-%token <str> T_AssignmentOperator  T_Semicolon T_identifier T_numericConstants T_stringLiteral
+%token <str> T_AssignmentOperator  T_Semicolon T_identifier T_numericConstants T_stringLiteral T_floatVal T_floatValE
 %token <str> T_character T_plus T_minus T_mod T_divide T_multiply error
 %token <str> T_switch T_case T_break T_default T_include T_cout T_cin T_endl T_colon 
-%token <str> T_whiteSpace T_shortHand
+%token <str> T_whiteSpace T_shortHand T_namespace
 
 %left T_LogicalAnd T_LogicalOr T_LogicalNot
 %left T_less T_less_equal T_greater T_greater_equal T_equal_equal T_not_equal
@@ -500,7 +499,7 @@ Start : T_include Start					{$$ = $2;}
       | T_include T_namespace Start		{$$ = $3;}
       | Main							{$$ = $1;}
 
-Main : T_type T_main T_openParenthesis T_closedParanthesis Body		{$$ = $6;}
+Main : T_type T_main T_openParenthesis T_closedParanthesis Body		{$$ = $5;}
 
 Body : openflower block_end_flower		{$$ = $2;}
 
@@ -520,7 +519,7 @@ stmt 	: expr T_Semicolon				{$$ = $1; Display_tree($$); fprintf(ast_tree_output,
 		| if_stmt						{$$ = $1; Display_tree($$); fprintf(ast_tree_output, "\n");}
 		| while_stmt					{$$ = $1; Display_tree($$); fprintf(ast_tree_output, "\n");}
 		| for_stmt						{$$ = $1; Display_tree($$); fprintf(ast_tree_output, "\n");}
-		| switch_stmt					{$$ = $1; Display_tree($$); fprintf(ast_tree_output, "\n");}
+		| switch_stmt					{;}
 		| Assignment_stmt T_Semicolon	{$$ = $1; Display_tree($$); fprintf(ast_tree_output, "\n");}
 		| error T_Semicolon 			{$$ = Construct_AST(NULL, NULL, ";"); }
 		;
@@ -549,21 +548,83 @@ Multiple_stmts_not_if	: stmt_without_if Multiple_stmts 				{$$ = $1;}
 stmt_without_if		: expr T_Semicolon									{$$ = $1;}
 					| Assignment_stmt T_Semicolon						{$$ = $1;Display_tree($$);fprintf(ast_tree_output, "\n");}
 					| while_stmt										{$$ = $1;}
-					|for_stmt											{$$ = $1;}
+					| for_stmt											{$$ = $1;}
 					;
 
-switch_stmt	:	T_switch T_openParenthesis COND T_closedParanthesis SWITCHBODY
+switch_stmt	:	T_switch T_openParenthesis expr T_closedParanthesis switch_body
+			;
+
+statement 	:	Assignment_stmt
+			|	expr
+			|	print
+			|	input
+			|	T_break
+			;
+
+switch_body :	T_openFlowerBracket cases T_closedFlowerBracket
+			|	T_Semicolon
+			| 	statement T_Semicolon
+			;
+
+cases	:	T_case caseval 
+		|	T_Semicolon
+		|	statement T_Semicolon
+		|	T_default T_colon defcasec
+		|
+		;
+
+C 	: C statement T_Semicolon
+	| C stmt
+	| statement T_Semicolon
+	| stmt
+	| T_openFlowerBracket C T_closedFlowerBracket
+	;
+
+caseval
+      : LIT T_colon casec
+      ;
+
+casec
+      : C
+      | T_case caseval
+      | C T_case caseval
+      | T_default caseval T_colon defcasec
+      | C T_default T_colon defcasec
+	  | T_Semicolon
+      ;
+
+defcaseval
+      : LIT T_colon defcasec
+      ;
+
+defcasec
+      : C
+      | T_case defcaseval
+      | C T_case defcaseval
+      ;
 
 Assignment_stmt		: idid T_AssignmentOperator expr										{push("=");TAC_assign();$$ = Construct_AST($1,$3,"=");}
 					| idid T_shortHand expr													{push("se");TAC_assign();$$ = Construct_AST($1,$3,"SE"); }
 					| T_type idid T_AssignmentOperator expr_without_constants   			{push("=");strcpy(G_val,$2->token);TAC_assign_back();insert_in_st($1, $2->token, st[top], "j");$$ = Construct_AST($2,$4,"=");}	
 					| T_type idid T_AssignmentOperator sc   								{push("=");TAC_assign();insert_in_st($1, $2->token, st[top], $4->token);$$ = Construct_AST($2,$4,"=");}
 					| T_type idid T_AssignmentOperator nc   								{push("=");TAC_assign();insert_in_st($1, $2->token, st[top], $4->token);$$ = Construct_AST($2,$4,"=");}
-					| T_int idid T_AssignmentOperator expr_without_constants    			{push("=");strcpy(G_val,$2->token);TAC_assign_back();insert_in_st($1, $2->token, st[top], "j");$$ = Construct_AST($2,$4,"=");}
-					| T_int idid T_AssignmentOperator nc    								{push("=");TAC_assign();insert_in_st($1, $2->token, st[top], $4->token);$$ = Construct_AST($2,$4,"=");}
 					;
 
+print
+      : T_cout T_OutputStream T_stringLiteral
+      | T_cout T_OutputStream T_stringLiteral T_OutputStream T_endl
+      ;
 
+input
+      : T_cin input
+      ;
+
+LIT	:	T_identifier
+	|	T_numericConstants
+	|	T_floatVal
+	|	T_stringLiteral
+	|	T_character
+	;
 
 expr_without_constants:  idid								{$$ = $1;}
 		| expr T_plus expr									{push("+");TAC();$$ = Construct_AST($1, $3, "+");}

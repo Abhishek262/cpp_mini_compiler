@@ -1,8 +1,21 @@
+#include<iostream>
+using namespace std;
 int main()
 {
-    int a = 4;
-    for(int i = 1; i < 10; i = i + 1)
-    {
-        int b = 6;
+    int x = 5;
+
+    switch(x){
+        case 5:
+            int a=5; 
+            int b=0;
+            break;
+        case 6:int x = 0;
+                break;
+
+        case 1010: int s = 45;
+        default : int fs = 3434;
+    
+
     }
-}
+
+}   
