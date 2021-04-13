@@ -467,8 +467,6 @@
 }
 
 
-
-
 %token <str> T_keyword T_main T_type T_return T_for T_if T_else T_while T_InputStream T_OutputStream 
 %token <str> T_openParenthesis T_closedParanthesis T_openFlowerBracket T_closedFlowerBracket 
 %token <str> T_RelationalOperator T_LogicalOperator T_UnaryOperator 
@@ -517,6 +515,7 @@ Multiple_stmts	: stmt Multiple_stmts						{$$ = $1;}
 
 stmt 	: expr T_Semicolon				{$$ = $1; Display_tree($$); fprintf(ast_tree_output, "\n");}
 		| if_stmt						{$$ = $1; Display_tree($$); fprintf(ast_tree_output, "\n");}
+		| print 						{;}
 		| while_stmt					{$$ = $1; Display_tree($$); fprintf(ast_tree_output, "\n");}
 		| for_stmt						{$$ = $1; Display_tree($$); fprintf(ast_tree_output, "\n");}
 		| switch_stmt					{;}
@@ -551,7 +550,7 @@ stmt_without_if		: expr T_Semicolon									{$$ = $1;}
 					| for_stmt											{$$ = $1;}
 					;
 
-switch_stmt	:	T_switch T_openParenthesis expr T_closedParanthesis switch_body
+switch_stmt	:	T_switch T_openParenthesis {IFSTMT();} expr T_closedParanthesis switch_body
 			;
 
 statement 	:	Assignment_stmt
@@ -611,8 +610,10 @@ Assignment_stmt		: idid T_AssignmentOperator expr										{push("=");TAC_assign
 					;
 
 print
-      : T_cout T_OutputStream T_stringLiteral
-      | T_cout T_OutputStream T_stringLiteral T_OutputStream T_endl
+      : T_cout T_OutputStream T_stringLiteral 
+      | T_cout T_OutputStream T_stringLiteral T_OutputStream T_endl 
+	  | T_cout T_OutputStream T_stringLiteral T_Semicolon
+      | T_cout T_OutputStream T_stringLiteral T_OutputStream T_endl T_Semicolon
       ;
 
 input

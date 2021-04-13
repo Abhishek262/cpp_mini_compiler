@@ -52,8 +52,8 @@ alignas|alignof|and|and_eq|asm|atomic_cancel|atomic_commit|atomic_noexcept|bitan
 ":"	 	                        {return T_colon;}
 
 
-"<<"							{return T_InputStream ;}
-">>"							{return T_OutputStream ;}
+">>"							{return T_InputStream ;}
+"<<"							{return T_OutputStream ;}
 "using namespace "{letter}+";"		{return T_namespace	;}
 
 "("							  	{return T_openParenthesis ;}		  
