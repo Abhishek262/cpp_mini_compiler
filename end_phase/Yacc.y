@@ -19,7 +19,7 @@
 	char i_[2]="0";
 	int temp_i = 0;				//current available temporary number
 	char tmp_i[10];				//an array to hold temporary variable number as string. We assume this is below 999999999				
-	char temp[10]="";			//an array to hold temporary varialbe name as string. We assume this is below T999999999	
+	char temp[10]="";			//an array to hold temporary variable name as string. We assume this is below T999999999	
 	int label[20];
 	int lnum = 0;				//current available label number.
 	int ltop = 0;
@@ -30,7 +30,13 @@
 	int stop = -1;				//top of stack
 	char G_val[10];
 	FILE* ast_tree_output;
-
+	char switch_iden[20][20];
+	char switch_caseno[20][20];
+	int switch_idx = 0;
+	int switch_casenoidx = 0;
+	int switch_caseno_curr_idx = 0;
+	int switch_set = 0;
+	int if_set = 0;
 
 	typedef struct quadruples
   	{
@@ -45,6 +51,14 @@
 	void push(char *a)			//push to top of stack
 	{
 		strcpy(st1[++stop],a);
+	}
+	void print_stack(){
+		printf("\n\n");
+		for(int i=0;i<stop;i++){
+			printf("%d : %s\n",i,st1[i]);
+
+		}
+		printf("\n\n");
 	}
 
 	// Statements -helper
@@ -66,6 +80,19 @@
 	    stop-=2;
 	    strcpy(st1[stop],temp);
 		temp_i++;
+	}
+
+
+	void TAC_switch(char *case_no)				
+	{
+		// print_stack();
+		push(switch_iden[switch_idx-1]);
+		push(case_no);
+	    push("==");
+		TAC();
+		//t4 = day==3
+
+		// printf("\n\nswitch idx %s\n\n",switch_iden[switch_idx]);
 	}
 
 	// Assignment Operations need a different TAC function as the operation performed is different
@@ -191,6 +218,7 @@
 	// Handle Initial IF as well as else if
 	void IFSTMT()
 	{
+		printf("IFSTMT\n");
 
 	    strcpy(temp,"T");
 	    sprintf(tmp_i, "%d", temp_i);
@@ -226,6 +254,8 @@
 
 	void Elif()
 	{
+		printf("elif\n");
+		
 		printf("L%d: \n",label[--ltop]);		//print the top in label stack as this is where runtime should come if cond is false
 	    										//increase lable for the next time										
 		
@@ -267,6 +297,8 @@
 
 	void if_else_cleanup()
 	{
+		printf("if_else_cleanup\n");
+
 		int y;
 		y = label[--ltop];
 		printf("L%d: \n",y);
@@ -515,7 +547,6 @@ Multiple_stmts	: stmt Multiple_stmts						{$$ = $1;}
 
 stmt 	: expr T_Semicolon				{$$ = $1; Display_tree($$); fprintf(ast_tree_output, "\n");}
 		| if_stmt						{$$ = $1; Display_tree($$); fprintf(ast_tree_output, "\n");}
-		| print 						{;}
 		| while_stmt					{$$ = $1; Display_tree($$); fprintf(ast_tree_output, "\n");}
 		| for_stmt						{$$ = $1; Display_tree($$); fprintf(ast_tree_output, "\n");}
 		| switch_stmt					{;}
@@ -534,7 +565,7 @@ while_stmt : T_while {While_Loop_Label();} T_openParenthesis expr T_closedParant
 
 if_stmt : T_if T_openParenthesis expr T_closedParanthesis {IFSTMT();} block elseif_else_empty {$$ = Construct_AST($3, $6, "IF");}
 
-elseif_else_empty 	: T_else T_if T_openParenthesis expr T_closedParanthesis {;Elif();} block elseif_else_empty {$$ = Construct_AST($4, $7, "ELSEIF"); }
+elseif_else_empty 	: T_else T_if T_openParenthesis expr T_closedParanthesis {Elif();} block elseif_else_empty {$$ = Construct_AST($4, $7, "ELSEIF"); }
 					| T_else {if_else_cleanup();} Multiple_stmts_not_if {$$ = $3;}
 					| T_else {if_else_cleanup();} openflower block_end_flower {$$ = $4;}
 					| {if_else_cleanup(); $$ = Construct_AST(NULL, NULL, ";"); }
@@ -550,7 +581,7 @@ stmt_without_if		: expr T_Semicolon									{$$ = $1;}
 					| for_stmt											{$$ = $1;}
 					;
 
-switch_stmt	:	T_switch T_openParenthesis {IFSTMT();} expr T_closedParanthesis switch_body
+switch_stmt	:	T_switch T_openParenthesis { switch_set = 1;} expr T_closedParanthesis switch_body 
 			;
 
 statement 	:	Assignment_stmt
@@ -568,8 +599,7 @@ switch_body :	T_openFlowerBracket cases T_closedFlowerBracket
 cases	:	T_case caseval 
 		|	T_Semicolon
 		|	statement T_Semicolon
-		|	T_default T_colon defcasec
-		|
+		|	T_default T_colon defcasec 
 		;
 
 C 	: C statement T_Semicolon
@@ -580,26 +610,26 @@ C 	: C statement T_Semicolon
 	;
 
 caseval
-      : LIT T_colon casec
+      : LIT {if(switch_set){TAC_switch(switch_caseno[switch_caseno_curr_idx]);switch_caseno_curr_idx++;IFSTMT();}else{TAC_switch(switch_caseno[switch_caseno_curr_idx]);switch_caseno_curr_idx++;Elif();} switch_set=0;} T_colon casec 
       ;
 
 casec
-      : C
-      | T_case caseval
-      | C T_case caseval
-      | T_default caseval T_colon defcasec
-      | C T_default T_colon defcasec
+      : C 
+      | T_case caseval 
+      | C T_case caseval 
+      | T_default caseval T_colon defcasec 
+      | C {if_else_cleanup();} T_default T_colon defcasec 
 	  | T_Semicolon
       ;
 
 defcaseval
-      : LIT T_colon defcasec
+      : LIT  T_colon defcasec
       ;
 
 defcasec
       : C
-      | T_case defcaseval
-      | C T_case defcaseval
+      | T_case  defcaseval
+      | C  T_case defcaseval
       ;
 
 Assignment_stmt		: idid T_AssignmentOperator expr										{push("=");TAC_assign();$$ = Construct_AST($1,$3,"=");}
@@ -612,19 +642,18 @@ Assignment_stmt		: idid T_AssignmentOperator expr										{push("=");TAC_assign
 print
       : T_cout T_OutputStream T_stringLiteral 
       | T_cout T_OutputStream T_stringLiteral T_OutputStream T_endl 
-	  | T_cout T_OutputStream T_stringLiteral T_Semicolon
-      | T_cout T_OutputStream T_stringLiteral T_OutputStream T_endl T_Semicolon
       ;
+
 
 input
       : T_cin input
       ;
 
-LIT	:	T_identifier
-	|	T_numericConstants
-	|	T_floatVal
-	|	T_stringLiteral
-	|	T_character
+LIT	:	T_identifier {strcpy(switch_caseno[switch_casenoidx],yylval.str);switch_casenoidx++;}
+	|	T_numericConstants {strcpy(switch_caseno[switch_casenoidx],yylval.str);switch_casenoidx++;}
+	|	T_floatVal {strcpy(switch_caseno[switch_casenoidx],yylval.str);switch_casenoidx++;}
+	|	T_stringLiteral {strcpy(switch_caseno[switch_casenoidx],yylval.str);switch_casenoidx++;}
+	|	T_character {strcpy(switch_caseno[switch_casenoidx],yylval.str);switch_casenoidx++;}
 	;
 
 expr_without_constants:  idid								{$$ = $1;}
@@ -654,7 +683,7 @@ expr: 	nc													{$$ = $1;}
 		| expr T_mod expr									{push("%");TAC();$$ = Construct_AST($1, $3, "%");}
 		| expr T_LogicalAnd expr							{push("&");TAC();$$ = Construct_AST($1, $3, "&");}
 		| expr T_LogicalOr expr								{push("|");TAC();$$ = Construct_AST($1, $3, "|");}
-		| expr T_less expr									{push("<");TAC();$$ = Construct_AST($1, $3, "<");}				
+		| expr T_less expr						{Elif();} 			{push("<");TAC();$$ = Construct_AST($1, $3, "<");}				
 		| expr T_less_equal expr							{push("<=");TAC();$$ = Construct_AST($1, $3, "<=");}
 		| expr T_greater expr								{push(">");TAC();$$ = Construct_AST($1, $3, ">");}
 		| expr T_greater_equal expr							{push(">=");TAC();$$ = Construct_AST($1, $3, ">=");}
@@ -663,12 +692,12 @@ expr: 	nc													{$$ = $1;}
 		;
 
 expr_or_empty_with_semicolon_and_assignment: expr_or_empty T_Semicolon			{$$ = $1;}
-	| Assignment_stmt T_Semicolon												{$$ = $1;}
+	| Assignment_stmt T_Semicolon												{$$ = $1;} 
 
 expr_or_empty_with_assignment_and_closed_parent: expr_or_empty T_closedParanthesis							{$$ = $1;}
 	| Assignment_stmt T_closedParanthesis																	{$$ = $1;}
 
-idid : T_identifier										{push((char*)yylval.str);$$ = Construct_AST(NULL, NULL, (char*)yylval.str); }	//push in stack. This will be used to generate ICG. Also, create leaf node for AST.
+idid : T_identifier										{if(switch_set){strcpy(switch_iden[switch_idx],yylval.str);switch_idx++;};      push((char*)yylval.str);$$ = Construct_AST(NULL, NULL, (char*)yylval.str); }	//push in stack. This will be used to generate ICG. Also, create leaf node for AST.
 		;
 sc 	 : T_stringLiteral									{push((char*)yylval.str);$$ = Construct_AST(NULL, NULL, (char*)yylval.str); }
 		;

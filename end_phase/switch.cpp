@@ -3,31 +3,43 @@ using namespace std;
 
 int main(){
     int day = 4;
-    cout << "ad";
+    int a=9;
     switch (day) {
     case 1:
-        cout << "Monday";
+        a = 4;
         break;
     case 2:
-        cout << "Tuesday";
+        a =5;
         break;
-        int a = 5;
     case 3:
-        cout << "Wednesday";
+        a =7;
         break;
-    case 4:
-        cout << "Thursday";
+    default:
+        a = 8;
         break;
-    case 5:
-        cout << "Friday";
-        break;
-    case 6:
-        cout << "Saturday";
-        break;
-    case 7:
-        cout << "Sunday";
-        break;
-}
+    }
 
-    cout << "sf";
+
+// day = 4
+// a = 9
+// T0 = day == 1
+// IFSTMT
+// T1 = not T0
+// if T1 goto L0
+// a = 4
+// T2 = day == 2
+// elif
+// L0: 
+// T3 = not T2
+// if T3 goto L1
+// a = 5
+// T4 = day == 3
+// elif
+// L1: 
+// T5 = not T4
+// if T5 goto L2
+// a = 7
+// if_else_cleanup
+// L2: 
+// a = 8
 }
