@@ -7,15 +7,11 @@ int main(){
     if(day ==1){
         a = 4;
     }
-    else if(day ==2){
-        a=5;
-    }
-    else if(day==3){
-        a=7;
-    }
     else{
         a=8;
     }
+
+    int x = 9;
 
 // day = 4
 // a = 9

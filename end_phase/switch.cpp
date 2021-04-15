@@ -3,6 +3,7 @@ using namespace std;
 
 int main(){
     int day = 4;
+    int daa =3;
     int a=9;
     switch (day) {
     case 1:
@@ -19,6 +20,7 @@ int main(){
         break;
     }
 
+    int x = 7;
 
 // day = 4
 // a = 9

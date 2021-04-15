@@ -1,0 +1,23 @@
+day = 4
+daa = 3
+a = 9
+T0 = day == 1
+T1 = not T0
+if T1 goto L0
+a = 4
+T2 = day == 2
+L0: 
+T3 = not T2
+if T3 goto L1
+a = 5
+T4 = day == 3
+L1: 
+T5 = not T4
+if T5 goto L2
+a = 7
+L2: 
+a = 8
+x = 7
+goto L0
+L3:
+x = 9
