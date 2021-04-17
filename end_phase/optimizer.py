@@ -142,7 +142,7 @@ def constant_folding(icgCode):
         c = 0
 
         # print(icgCode[i])
-        while(check_digit(line.split()[2]) == True  and len(line.split())>3 and line.split()[2] == temp_var and "if" not in line and "goto" not in line):
+        while(len(line.split())>3 and line.split()[2] == temp_var and "if" not in line and "goto" not in line and check_digit(line.split()[2]) == True  ):
 
             if(icgCode[i] not in temp and len(icgCode[i].split())>3):
                 temp.append(icgCode[i])
