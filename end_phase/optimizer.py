@@ -62,8 +62,8 @@ def dead_code_elim(icgCode) :
     
     leaders = find_basic_blocks(icgCode)
     cfg = create_cfg(icgCode,leaders)
-    pprint(leaders)
-    pprint(cfg)
+    # pprint(leaders)
+    # pprint(cfg)
 
     ret_icg = []
     end_arr = []
@@ -82,12 +82,26 @@ def dead_code_elim(icgCode) :
                 arr[i] = 1 
 
     arr[0] = 1
-    print(arr)
+    # print(arr)
     for i in range(len(arr)):
         if(arr[i]==0):
             for j in range(leaders[i],end_arr[i]): 
                 icgCode[j] = ""
             # del icgCode[leaders[i+1]:arr[i+1]]
+
+    #check for unused variables now
+    lst = []
+    for i in range(len(icgCode)):
+        l = icgCode[i].split()
+        used  = True
+        if(len(l)==3):
+            used  = False
+            for j in range(len(icgCode)):
+                if " "+ l[0] + " " in icgCode[j] or " " + l[0] in icgCode[j] :
+                    used  = True
+
+        if(used == False):
+            icgCode[i] = ""
 
     while("" in icgCode) :
         icgCode.remove("")
@@ -98,11 +112,27 @@ def dead_code_elim(icgCode) :
 # icgCode = dead_code_elim(icgCode)
 # pprint(icgCode)
 
+def check_digit(string):
+    if(string.isdigit() == True or (string.startswith('-')== True and string[1:].isdigit() == True)):
+        return True 
+    return False
+
+
 def constant_folding(icgCode):
     #   T2 = 4 * 7',
     #  'T3 = T2 * 9',
     #  'T4 = T3 * 10',
     #  T4 = 7*9*10
+
+    #'T0 = 10 * 20',
+    for i in range(len(icgCode)-1):
+        br = icgCode[i].split()
+        if(len(br)==5):
+            if(check_digit(br[2]) == True and check_digit(br[4])==True):
+                icgCode[i] = icgCode[i].split("=")[0] + "= " + str(eval(br[2]+br[3]+br[4]))
+
+
+
     num_array = []
     temp = []
     for i in range(len(icgCode)-1):
@@ -112,15 +142,18 @@ def constant_folding(icgCode):
         c = 0
 
         # print(icgCode[i])
-        while(len(line.split())>3 and line.split()[2] == temp_var and "if" not in line and "goto" not in line):
+        while(check_digit(line.split()[2]) == True  and len(line.split())>3 and line.split()[2] == temp_var and "if" not in line and "goto" not in line):
 
-            if(icgCode[i] not in temp ):
+            if(icgCode[i] not in temp and len(icgCode[i].split())>3):
                 temp.append(icgCode[i])
-            if(line not in temp):  
+            if(line not in temp and len(line.split())>3):  
                 temp.append(line) 
 
             temp_var = icgCode[l].split()[0]
             l+=1
+            if(l>=len(icgCode)):
+                c =1
+                break
             c+=1
             line = icgCode[l]
 
@@ -141,6 +174,7 @@ def constant_folding(icgCode):
         f = 0
         while(temp[x]!=""):
             sp = temp[x].split()
+            # print(sp)
             if(s):
                 s = False
                 l.append(sp[2])
@@ -158,7 +192,7 @@ def constant_folding(icgCode):
     
     # print("F")
     # print(to_del)
-
+    # print(op)
     for lst in op:
         a = "".join(lst)
         res.append(eval(a))
@@ -187,7 +221,7 @@ def constant_folding(icgCode):
 
     return icgCode
 
-
+#constant + copy 
 def constant_propagation(icgCode):
     for line in icgCode:
         l = line.split()
@@ -209,8 +243,24 @@ def common_subexpression_elim(icgCode):
                     sp = icgCode[i].split("=")
                     icgCode[i] = sp[0] + "= " + l[0]
 
-    print(icgCode)
+    return icgCode
 
+print("Before optimization")
 pprint(icgCode)
-# print(constant_propagation(icgCode))
-common_subexpression_elim(icgCode)
+print("After optimization")
+
+icgCode = constant_propagation(icgCode)
+pprint(icgCode)
+
+icgCode = constant_folding(icgCode)
+pprint(icgCode)
+
+icgCode = constant_propagation(icgCode)
+pprint(icgCode)
+
+icgCode = dead_code_elim(icgCode)
+pprint(icgCode)
+
+# icgCode = common_subexpression_elim(icgCode)
+
+# pprint(icgCode)
