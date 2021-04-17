@@ -1,5 +1,6 @@
 import fileinput
 from pprint import pprint
+import re
 
 icgCode = []
 
@@ -126,7 +127,7 @@ def constant_folding(icgCode):
         if(c>0 and temp[len(temp)-1]!=""):
             temp.append("")
 
-    print(temp)
+    # print(temp)
     res = []
     x = 0
     s = False
@@ -155,8 +156,8 @@ def constant_folding(icgCode):
         to_del.append(f-1)
         repl_instr.append(temp[x-2])
     
-    print("F")
-    print(to_del)
+    # print("F")
+    # print(to_del)
 
     for lst in op:
         a = "".join(lst)
@@ -175,7 +176,7 @@ def constant_folding(icgCode):
     for i in range(len(res_instr)):
         for j in range(len(icgCode)):
             if icgCode[j] == repl_instr[i]:
-                print(icgCode[j])
+                # print(icgCode[j])
                 icgCode[j] = res_instr[i]
                 f = to_del[i]
                 while(f!=0):
@@ -187,9 +188,24 @@ def constant_folding(icgCode):
     return icgCode
 
 
-pprint(icgCode)
+def constant_propagation(icgCode):
+    for line in icgCode:
+        l = line.split()
+        if len(l) == 3 and "T" not in l[2]:
+            for i in range(len(icgCode)):
+                if " "+l[0]+" " in icgCode[i]:
+                    icgCode[i] = re.sub(" "+l[0]+" "," "+l[2]+" ",icgCode[i])
+                elif " "+l[0] in icgCode[i]:
+                    icgCode[i] = re.sub(" "+l[0]," "+l[2],icgCode[i])
+
+    return icgCode
+
+
+
+print(icgCode)
+icgCode = constant_propagation(icgCode)
+print(icgCode)
 icgCode = constant_folding(icgCode)
-        
-        
-
-
+print(icgCode)
+icgCode = constant_propagation(icgCode)
+print(icgCode)
