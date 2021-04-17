@@ -7,16 +7,16 @@ int main(){
     int a=9;
     switch (day) {
     case 1:
-        a = 4;
+        a = 4*7*9*10;
         break;
     case 2:
-        a =5;
+        a =5*6*7;
         break;
     case 3:
         a =7;
         break;
     default:
-        a = 8;
+        a = 8*9*10;
         break;
     }
 
