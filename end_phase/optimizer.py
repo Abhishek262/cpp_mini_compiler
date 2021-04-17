@@ -200,12 +200,17 @@ def constant_propagation(icgCode):
 
     return icgCode
 
+def common_subexpression_elim(icgCode):
+    for line in icgCode:
+        l = line.split()
+        if(len(l)==5):
+            for i in range(len(icgCode)):
+                if l[2] +" "+  l[3] +" "+ l[4] in icgCode[i] and icgCode[i] != line:
+                    sp = icgCode[i].split("=")
+                    icgCode[i] = sp[0] + "= " + l[0]
 
+    print(icgCode)
 
-print(icgCode)
-icgCode = constant_propagation(icgCode)
-print(icgCode)
-icgCode = constant_folding(icgCode)
-print(icgCode)
-icgCode = constant_propagation(icgCode)
-print(icgCode)
+pprint(icgCode)
+# print(constant_propagation(icgCode))
+common_subexpression_elim(icgCode)
