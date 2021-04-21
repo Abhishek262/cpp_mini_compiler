@@ -52,6 +52,19 @@
 	{
 		strcpy(st1[++stop],a);
 	}
+	int typecheck(char *type, char *expected)
+	{
+		int cmp = strcmp(type, expected);
+		if (cmp == 0)
+		{
+			return 1;
+		}
+		else
+		{
+			printf("Error: type mismatch error. Expected: %s , got: %s\n", expected, type);
+			return 0;
+		}
+	}
 	void print_stack(){
 		printf("\n\n");
 		for(int i=0;i<stop;i++){
@@ -517,7 +530,7 @@
 %type <NODE> expr_without_constants expr expr_or_empty closeflower
 %type <NODE> Assignment_stmt
 %type <NODE> for_stmt while_stmt 
-%type <NODE> idid nc sc
+%type <NODE> idid nc sc fv fve
 %type <NODE> expr_or_empty_with_semicolon_and_assignment  expr_or_empty_with_assignment_and_closed_parent
 
 %%
@@ -550,6 +563,8 @@ stmt 	: expr T_Semicolon				{$$ = $1; Display_tree($$); fprintf(ast_tree_output,
 		| while_stmt					{$$ = $1; Display_tree($$); fprintf(ast_tree_output, "\n");}
 		| for_stmt						{$$ = $1; Display_tree($$); fprintf(ast_tree_output, "\n");}
 		| switch_stmt					{;}
+		| print
+		| input
 		| Assignment_stmt T_Semicolon	{$$ = $1; Display_tree($$); fprintf(ast_tree_output, "\n");}
 		| error T_Semicolon 			{$$ = Construct_AST(NULL, NULL, ";"); }
 		;
@@ -636,17 +651,20 @@ Assignment_stmt		: idid T_AssignmentOperator expr										{push("=");TAC_assign
 					| idid T_shortHand expr													{push("se");TAC_assign();$$ = Construct_AST($1,$3,"SE"); }
 					| T_type idid T_AssignmentOperator expr_without_constants   			{push("=");strcpy(G_val,$2->token);TAC_assign_back();insert_in_st($1, $2->token, st[top], "j");$$ = Construct_AST($2,$4,"=");}	
 					| T_type idid T_AssignmentOperator sc   								{push("=");TAC_assign();insert_in_st($1, $2->token, st[top], $4->token);$$ = Construct_AST($2,$4,"=");}
-					| T_type idid T_AssignmentOperator nc   								{push("=");TAC_assign();insert_in_st($1, $2->token, st[top], $4->token);$$ = Construct_AST($2,$4,"=");}
+					| T_type idid T_AssignmentOperator nc   								{if(typecheck($1, "int") == 1) { push("=");TAC_assign();insert_in_st($1, $2->token, st[top], $4->token);$$ = Construct_AST($2,$4,"=");} else {yylineno; yyerror;}}
+					| T_type idid T_AssignmentOperator fv   								{if(typecheck($1, "float") == 1) { push("=");TAC_assign();insert_in_st($1, $2->token, st[top], $4->token);$$ = Construct_AST($2,$4,"=");} else {yylineno; yyerror;}}
+					| T_type idid T_AssignmentOperator fve   								{if(typecheck($1, "float") == 1) { push("=");TAC_assign();insert_in_st($1, $2->token, st[top], $4->token);$$ = Construct_AST($2,$4,"=");} else {yylineno; yyerror;}}
 					;
 
 print
-      : T_cout T_OutputStream T_stringLiteral 
-      | T_cout T_OutputStream T_stringLiteral T_OutputStream T_endl 
+      : T_cout T_OutputStream T_stringLiteral T_Semicolon
+	  | T_cout T_OutputStream idid T_Semicolon
+      | T_cout T_OutputStream T_stringLiteral T_OutputStream T_endl T_Semicolon
       ;
 
 
 input
-      : T_cin input
+      : T_cin T_InputStream idid T_Semicolon
       ;
 
 LIT	:	T_identifier {strcpy(switch_caseno[switch_casenoidx],yylval.str);switch_casenoidx++;}
@@ -674,6 +692,8 @@ expr_without_constants:  idid								{$$ = $1;}
 
 //an expression without semicolon at end.
 expr: 	nc													{$$ = $1;}
+		| fv												{$$ = $1;}
+		| fve												{$$ = $1;}
 		| sc												{$$ = $1;}								
 		| idid												{$$ = $1;}
 		| expr T_plus expr									{push("+");TAC();$$ = Construct_AST($1, $3, "+");}	//push into stack and call TAC which generates corresponding TAC. Also generate node for AST
@@ -702,6 +722,10 @@ idid : T_identifier										{if(switch_set){strcpy(switch_iden[switch_idx],yylv
 sc 	 : T_stringLiteral									{push((char*)yylval.str);$$ = Construct_AST(NULL, NULL, (char*)yylval.str); }
 		;
 nc	 : T_numericConstants								{push((char*)yylval.str);$$ = Construct_AST(NULL, NULL, (char*)yylval.str); }
+		;
+fv	 : T_floatVal										{push((char*)yylval.str);$$ = Construct_AST(NULL, NULL, (char*)yylval.str); }
+		;
+fve	 : T_floatValE										{push((char*)yylval.str);$$ = Construct_AST(NULL, NULL, (char*)yylval.str); }
 		;
 
 expr_or_empty: expr										{$$ = $1;}
@@ -847,7 +871,7 @@ int main()
 	// printf("\n*************************************************************************************************\n");
 	
 	// printf("Before Optimization:\n");
-	// symboldisplay();
+	symboldisplay();
 
 	// icg_optimize();
 
