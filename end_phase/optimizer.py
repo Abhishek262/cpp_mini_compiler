@@ -5,6 +5,8 @@ import re
 icgCode = []
 
 for line in fileinput.input():
+    if(len(line)>100):
+        break;
     line = line.rstrip("\n")
     icgCode.append(line)
     
@@ -245,22 +247,34 @@ def common_subexpression_elim(icgCode):
 
     return icgCode
 
-print("Before optimization")
-pprint(icgCode)
-print("After optimization")
+def print_icg(icgCode):
+    for line in icgCode:
+        print(line)
+    print()
 
+print("Before optimization\n")
+print_icg(icgCode)
+print("Optimization steps : \n")
+
+print("Constant propagation \n")
 icgCode = constant_propagation(icgCode)
-pprint(icgCode)
+print_icg(icgCode)
 
+print("Constant folding \n")
 icgCode = constant_folding(icgCode)
-pprint(icgCode)
+print_icg(icgCode)
 
+print("Constant propagation \n")
 icgCode = constant_propagation(icgCode)
-pprint(icgCode)
+print_icg(icgCode)
 
+print("Common SubExpression Elimination \n")
+icgCode = common_subexpression_elim(icgCode)
+print_icg(icgCode)
+
+print("Dead Code elimination\n")
 icgCode = dead_code_elim(icgCode)
-pprint(icgCode)
+print_icg(icgCode)
 
-# icgCode = common_subexpression_elim(icgCode)
 
 # pprint(icgCode)

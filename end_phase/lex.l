@@ -162,6 +162,23 @@ void display()
 	}	
 }
 
+void fdisplay()
+{
+	FILE *foo;
+	foo = fopen("sym.txt","w");
+
+	for(int i=0;i<=count;i++)
+	{
+		int h=Symbol_Table[i].up;
+		for (int j=1;j<=h;j++)
+		{
+		fprintf(foo,"Symbol:%s \t Scope:%d \t Line number: %s \t Type: %s \t Storage: %d \t Value: %s\n "
+		,Symbol_Table[i].arr[j].var_name,Symbol_Table[i].arr[j].scope,Symbol_Table[i].arr[j].Line_t,
+		 Symbol_Table[i].arr[j].type, Symbol_Table[i].arr[j].storage,  Symbol_Table[i].arr[j].value);		}
+	}	
+	fclose(foo);
+}
+
 void insert_in_st(char* type, char* id, int scp, char* value)
 {
 	

@@ -1,1 +1,64 @@
-a = 1
+day = 4
+daa = 3
+a = 9
+T0 = day == 1
+T1 = not T0
+if T1 goto L0
+T2 = 4 * 7
+T3 = T2 * 9
+T4 = T3 * 10
+a = T4
+T5 = day == 2
+L0: 
+T6 = not T5
+if T6 goto L1
+T7 = 5 * 6
+T8 = T7 * 7.5
+a = T8
+T9 = day == 3
+L1: 
+T10 = not T9
+if T10 goto L2
+a = 7
+L2: 
+T11 = 8 * 9
+T12 = T11 * 10
+a = T12
+x = 7
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Symbol Table
+Symbol:day 	 Scope:1 	 Line number: 5,8 	 Type: int 	 Storage: 4 	 Value: 4
+ Symbol:daa 	 Scope:1 	 Line number: 6 	 Type: int 	 Storage: 4 	 Value: 3
+ Symbol:a 	 Scope:1 	 Line number: 7 	 Type: int 	 Storage: 4 	 Value: 9
+ Symbol:x 	 Scope:1 	 Line number: 23 	 Type: int 	 Storage: 4 	 Value: 7
+ Symbol:a 	 Scope:2 	 Line number: 10,13,16,19 	 Type:  	 Storage: 0 	 Value: 
+ 
+_______________________________________________________________________________________________________
+Quadruplets
+=        	 4        	 (null)   	 day    
+=        	 3        	 (null)   	 daa    
+=        	 9        	 (null)   	 a      
+==       	 day      	 1        	 T0     
+not      	 T0       	 (null)   	 T1     
+if       	 T1       	 (null)   	 L0     
+*        	 4        	 7        	 T2     
+*        	 T2       	 9        	 T3     
+*        	 T3       	 10       	 T4     
+=        	 T4       	 (null)   	 a      
+==       	 day      	 2        	 T5     
+not      	 T5       	 (null)   	 T6     
+if       	 T6       	 (null)   	 L1     
+*        	 5        	 6        	 T7     
+*        	 T7       	 7.5      	 T8     
+=        	 T8       	 (null)   	 a      
+==       	 day      	 3        	 T9     
+not      	 T9       	 (null)   	 T10    
+if       	 T10      	 (null)   	 L2     
+=        	 7        	 (null)   	 a      
+Label    	 (null)   	 (null)   	 L2     
+*        	 8        	 9        	 T11    
+*        	 T11      	 10       	 T12    
+=        	 T12      	 (null)   	 a      
+=        	 7        	 (null)   	 x      
+
+_______________________________________________________________________________________________________

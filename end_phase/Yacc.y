@@ -806,52 +806,7 @@ void icg_optimize()
 
 		}
 	}
-	// //finding leaders for basic blocks
-	// int leaderarray[quadindex];
-	// int leadindex = 0;
-	// for(int i = 0; i<quadindex; i++){
-	// 	//first line is always a leader
-	// 	if(i==0){		
-	// 		leaderarray[leadindex]=i;	
-	// 		leadindex++;
-	// 	}
-	// 	else if(strcmp(Q[i].op, "goto")==1){
-	// 		//line following a jump is always a leader
-	// 		leaderarray[leadindex]=i+1;
-	// 		target = Q[i].res;
-	// 		for(int j = 0; j<quadindex; j++){
-	// 			//target of a jump is a leader
-	// 			if(strcmp(Q[j].op, "Label")==1 && strcmp(Q[j].res, "target")==1){
-	// 				leaderarray[leadindex]=j;
-	// 				leadindex++;
-	// 				break;
-	// 			}
-	// 		}
 
-	// 	}
-	// }
-	// //sort leaderarray to remove duplicates
-	// for(int i = 0; i<leadindex; i++){
-	// 	for(int j = i+1; j<leadindex; j++){
-	// 		if(leaderarray[i]>leaderarray[j]){
-	// 			int a = leaderarray[i];
-	// 			leaderarray[i] = leaderarray[j];
-	// 			leaderarray[j] = a;
-	// 		}
-	// 	}
-	// }
-	// //removing duplicates
-	// int j = 0;
-	// for (int i=0; i < leadindex-1; i++){
-    //     if (leaderarray[i] != leaderarray[i+1]){
-    //         leaderarray[j++] = leaderarray[i];
-	// 	}
-	// }
-    // leaderarray[j++] = leaderarray[n-1];
-
-
-
-	//now create cfg somehow
 }
 
 int main()
@@ -862,18 +817,17 @@ int main()
 		printf("Could not open output file, aborting\n");
 		exit(1);
 	}
-	yyparse();				//parse through the input. This step effectively also fills the symbol table, generates the AST and computes & prints ICG.
+	yyparse();				
+	printf("----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
+
+	printf("\nSymbol Table\n");
 	
-	// printf("\n**************************************Symbol Table****************************************\n");
-	
-	// display();				//display the symbol table. The function is defined in lex.l
-	
+	display();				
+	fdisplay();
 	// printf("\n*************************************************************************************************\n");
-	
+	// printf("\n");
 	// printf("Before Optimization:\n");
 	symboldisplay();
-
-	// icg_optimize();
 
 	// printf("After Optimization:\n");
 	// symboldisplay();

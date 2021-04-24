@@ -1,0 +1,6 @@
+Symbol:day 	 Scope:1 	 Line number: 5,8 	 Type: int 	 Storage: 4 	 Value: 4
+ Symbol:daa 	 Scope:1 	 Line number: 6 	 Type: int 	 Storage: 4 	 Value: 3
+ Symbol:a 	 Scope:1 	 Line number: 7 	 Type: int 	 Storage: 4 	 Value: 9
+ Symbol:x 	 Scope:1 	 Line number: 23 	 Type: int 	 Storage: 4 	 Value: 7
+ Symbol:a 	 Scope:2 	 Line number: 10,13,16,19 	 Type:  	 Storage: 0 	 Value: 
+ 
