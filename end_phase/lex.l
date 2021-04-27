@@ -16,7 +16,7 @@ letter [A-Za-z_]
 	// char Global_Type_Array[100];
 %}
 
-
+ 
  
 %option yylineno
 

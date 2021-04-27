@@ -70,6 +70,7 @@ for line in icgCode:
                 val = "False"
         
         else:
+            # print(eval_str)
             val = eval(eval_str)
             if("." in str(val)):
                 tmpType = "double"
